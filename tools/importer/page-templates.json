@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "projectType": "doc"
+  },
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://www.zendesk.com"
+      ],
+      "representativeUrl": "https://www.zendesk.com",
+      "coverageGaps": [],
+      "description": "Zendesk corporate homepage with AI-powered service messaging: hero with email capture, trusted-by logo strip, resolution learning loop feature cards, animated data-point stats, promo banners (Relate/3-pillars, Forethought, Warriors partnership, Gartner), AI-first service tabs, product cards (employee service, contact center), testimonials carousel, marketplace ecosystem, additional-resources cards, pricing CTA, footer CTA, and FAQ accordion.",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": ["#hero"]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            "#logos",
+            "#datapoints",
+            "#forethought",
+            "#gartner",
+            "#marketplace_ecosystem",
+            "#main-content > div.sc-f9eaaf5f-0.cwMKbe > section.sc-3cb30ae3-10.jDUkDo:nth-of-type(7)"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            "#resolution_learning_loop",
+            "#employee_service_contact_center",
+            "#resources",
+            "#main-content > div.sc-f9eaaf5f-0.cwMKbe > section.sc-3cb30ae3-10.jDUkDo:nth-of-type(5)"
+          ]
+        },
+        {
+          "name": "tabs",
+          "instances": ["#ai_first_customer_service"]
+        },
+        {
+          "name": "carousel",
+          "instances": ["#testimonials"]
+        },
+        {
+          "name": "accordion",
+          "instances": ["#footer_faq"]
+        }
+      ],
+      "sections": [
+        { "id": "rc1", "name": "Hero", "selector": "#hero", "style": null, "blocks": ["hero"], "defaultContent": [] },
+        { "id": "rc2", "name": "Trust Logos", "selector": "#logos", "style": null, "blocks": ["columns"], "defaultContent": ["#logos h2"] },
+        { "id": "rc3", "name": "Resolution Learning Loop", "selector": "#resolution_learning_loop", "style": null, "blocks": ["cards"], "defaultContent": ["#resolution_learning_loop h2", "#resolution_learning_loop p"] },
+        { "id": "rc4", "name": "Data Points Stats", "selector": "#datapoints", "style": null, "blocks": ["columns"], "defaultContent": ["#datapoints h3"] },
+        { "id": "rc5", "name": "Relate Promo + 3 Pillars", "selector": "#main-content > div.sc-f9eaaf5f-0.cwMKbe > section.sc-3cb30ae3-10.jDUkDo:nth-of-type(5)", "style": null, "blocks": ["columns", "cards"], "defaultContent": [] },
+        { "id": "rc6", "name": "Forethought Promo", "selector": "#forethought", "style": null, "blocks": ["columns"], "defaultContent": [] },
+        { "id": "rc7", "name": "Warriors Partnership Promo", "selector": "#main-content > div.sc-f9eaaf5f-0.cwMKbe > section.sc-3cb30ae3-10.jDUkDo:nth-of-type(7)", "style": null, "blocks": ["columns"], "defaultContent": [] },
+        { "id": "rc8", "name": "AI-First Service Tabs", "selector": "#ai_first_customer_service", "style": "dark", "blocks": ["tabs"], "defaultContent": ["#ai_first_customer_service h2", "#ai_first_customer_service p"] },
+        { "id": "rc9", "name": "Employee Service + Contact Center Cards", "selector": "#employee_service_contact_center", "style": null, "blocks": ["cards"], "defaultContent": ["#employee_service_contact_center h2"] },
+        { "id": "rc10", "name": "Gartner Report Promo", "selector": "#gartner", "style": null, "blocks": ["columns"], "defaultContent": [] },
+        { "id": "rc11", "name": "Testimonials Carousel", "selector": "#testimonials", "style": null, "blocks": ["carousel"], "defaultContent": ["#testimonials h2", "#testimonials p"] },
+        { "id": "rc12", "name": "Marketplace Ecosystem", "selector": "#marketplace_ecosystem", "style": null, "blocks": ["columns"], "defaultContent": [] },
+        { "id": "rc13", "name": "Additional Resources Cards", "selector": "#resources", "style": null, "blocks": ["cards"], "defaultContent": ["#resources h2"] },
+        { "id": "rc14", "name": "Pricing CTA", "selector": "#pricing", "style": null, "blocks": [], "defaultContent": ["#pricing h2", "#pricing p"] },
+        { "id": "rc15", "name": "Footer CTA", "selector": "#footer_cta", "style": "dark", "blocks": [], "defaultContent": ["#footer_cta h2"] },
+        { "id": "rc16", "name": "FAQ Accordion", "selector": "#footer_faq", "style": "dark", "blocks": ["accordion"], "defaultContent": ["#footer_faq h3"] }
+      ]
+    }
+  ]
+}

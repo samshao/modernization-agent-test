@@ -10,6 +10,8 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  readBlockConfig,
+  toClassName,
 } from './aem.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
@@ -36,6 +38,162 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
     createScript: (input) => input,
   });
 }
+
+// --- BEGIN DM/Scene7 auto-block (excat-generated) ---
+
+const DM_BREAKPOINTS = [
+  { media: '(min-width: 600px)', width: 2000 }, // desktop
+  { width: 750 }, // mobile / fallback (no media)
+];
+
+// ---- Canonical helpers (keep in sync with dm-scene7-helpers.js) ----
+function detectDynamicMediaUrl(urlStr) {
+  if (!/^(https?:\/\/|\/\/)/i.test(urlStr)) return false;
+  let u;
+  try { u = new URL(urlStr, 'https://x/'); } catch { return false; }
+  if (u.pathname.startsWith('/is/image/')) {
+    return 'scene7';
+  }
+  if (/^delivery-p\d+-e\d+\.adobeaemcloud\.com$/.test(u.hostname)
+      && u.pathname.startsWith('/adobe/assets/urn:')) {
+    return 'dm-openapi';
+  }
+  return false;
+}
+
+function buildScene7Rendition(src, { width, format }) {
+  const normalized = src.startsWith('//') ? `https:${src}` : src;
+  const qIdx = normalized.indexOf('?');
+  const base = qIdx >= 0 ? normalized.slice(0, qIdx) : normalized;
+  const query = qIdx >= 0 ? normalized.slice(qIdx + 1) : '';
+  const pairs = query.split('&').filter((p) => p);
+  const filtered = pairs.filter((p) => {
+    const k = p.split('=')[0];
+    return k !== 'wid' && k !== 'fmt';
+  });
+  filtered.push(`wid=${width}`);
+  filtered.push(`fmt=${format}`);
+  return `${base}?${filtered.join('&')}`;
+}
+
+function buildDmOpenApiRendition(src, { width }) {
+  const url = new URL(src, 'https://x/');
+  url.searchParams.set('width', String(width));
+  return url.toString();
+}
+
+function findDmOnAnchor(a) {
+  if (!a || typeof a.getAttribute !== 'function') return null;
+  const href = a.getAttribute('href') || '';
+  if (detectDynamicMediaUrl(href)) return { mode: 'unlinked', dmUrl: href };
+  const title = a.getAttribute('title') || '';
+  if (detectDynamicMediaUrl(title)) return { mode: 'linked', dmUrl: title };
+  return null;
+}
+
+function isUnwrappableMarkdownParagraph(anchor) {
+  const parent = anchor && anchor.parentElement;
+  if (!parent || parent.tagName !== 'P') return false;
+  if (parent.children.length !== 1 || parent.firstElementChild !== anchor) return false;
+  return parent.textContent.trim() === anchor.textContent.trim();
+}
+
+const EMPTY_ALT_SENTINEL = 'Image without alt text';
+
+function linkTextToAlt(linkText) {
+  return linkText === EMPTY_ALT_SENTINEL ? '' : linkText;
+}
+
+// ---- Rendering ----
+function appendSource(picture, { type, srcset, media }) {
+  const source = document.createElement('source');
+  if (type) source.type = type;
+  source.srcset = srcset;
+  if (media) source.setAttribute('media', media);
+  picture.append(source);
+}
+
+function renderScene7Picture(src, alt) {
+  const picture = document.createElement('picture');
+  DM_BREAKPOINTS.forEach((bp) => appendSource(picture, {
+    type: 'image/webp',
+    srcset: buildScene7Rendition(src, { width: bp.width, format: 'webp' }),
+    media: bp.media,
+  }));
+  DM_BREAKPOINTS.forEach((bp) => appendSource(picture, {
+    type: 'image/jpeg',
+    srcset: buildScene7Rendition(src, { width: bp.width, format: 'jpg' }),
+    media: bp.media,
+  }));
+  const img = document.createElement('img');
+  img.src = buildScene7Rendition(src, { width: 750, format: 'jpg' });
+  img.alt = alt;
+  img.loading = 'lazy';
+  picture.append(img);
+  return picture;
+}
+
+function renderDmOpenApiPicture(src, alt) {
+  const picture = document.createElement('picture');
+  DM_BREAKPOINTS.forEach((bp) => appendSource(picture, {
+    srcset: buildDmOpenApiRendition(src, { width: bp.width }),
+    media: bp.media,
+  }));
+  const img = document.createElement('img');
+  img.src = buildDmOpenApiRendition(src, { width: 750 });
+  img.alt = alt;
+  img.loading = 'lazy';
+  picture.append(img);
+  return picture;
+}
+
+function buildDynamicMediaImages(main) {
+  main.querySelectorAll('a').forEach((a) => {
+    const match = findDmOnAnchor(a);
+    if (!match) return;
+
+    const { mode, dmUrl } = match;
+    const alt = linkTextToAlt(a.textContent.trim());
+    const picture = detectDynamicMediaUrl(dmUrl) === 'scene7'
+      ? renderScene7Picture(dmUrl, alt)
+      : renderDmOpenApiPicture(dmUrl, alt);
+
+    a.classList.remove('button', 'primary', 'secondary');
+    if (a.classList.length === 0) a.removeAttribute('class');
+    const buttonContainer = a.parentElement;
+    if (
+      buttonContainer
+      && buttonContainer.classList.contains('button-container')
+      && buttonContainer.children.length === 1
+    ) {
+      buttonContainer.classList.remove('button-container');
+      if (buttonContainer.classList.length === 0) buttonContainer.removeAttribute('class');
+    }
+
+    if (mode === 'linked') {
+      a.removeAttribute('title');
+      a.replaceChildren(picture);
+      return;
+    }
+
+    if (isUnwrappableMarkdownParagraph(a)) {
+      a.parentElement.replaceWith(picture);
+    } else {
+      a.replaceWith(picture);
+    }
+  });
+}
+
+// Register the DM dispatcher for createOptimizedPicture interop (see aem.js patch).
+window.__dmRender__ = (src, alt) => {
+  const family = detectDynamicMediaUrl(src);
+  if (!family) return null;
+  return family === 'scene7'
+    ? renderScene7Picture(src, alt)
+    : renderDmOpenApiPicture(src, alt);
+};
+
+// --- END DM/Scene7 auto-block ---
 
 /**
  * load fonts.css and set a session storage flag
@@ -97,6 +255,7 @@ function buildAutoBlocks(main) {
       });
     }
     buildWidgetAutoBlocks(main);
+    buildDynamicMediaImages(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
@@ -146,11 +305,37 @@ function decorateButtons(main) {
  * Decorates the main element.
  * @param {Element} main The main element
  */
+/**
+ * Applies "Section Metadata" blocks to their section as style classes, then
+ * removes the block. This project's aem.js fork omits the section-metadata
+ * handling that upstream aem.js performs in decorateSections, so we do it here.
+ * Must run AFTER decorateSections (which wraps children and adds .section) and
+ * BEFORE decorateBlocks (so the section-metadata div isn't decorated as a block).
+ * @param {Element} main The container element
+ */
+function decorateSectionMetadata(main) {
+  main.querySelectorAll(':scope > .section > div > .section-metadata').forEach((sectionMeta) => {
+    const section = sectionMeta.closest('.section');
+    const meta = readBlockConfig(sectionMeta);
+    Object.keys(meta).forEach((key) => {
+      if (key === 'style') {
+        const styles = meta.style.split(',').map((style) => toClassName(style.trim())).filter((style) => style);
+        styles.forEach((style) => section.classList.add(style));
+      } else {
+        section.dataset[toClassName(key)] = meta[key];
+      }
+    });
+    // Remove the now-consumed section-metadata wrapper.
+    sectionMeta.parentElement.remove();
+  });
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionMetadata(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
