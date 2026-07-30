@@ -1,0 +1,275 @@
+/* Block: carousel-hero -- Fortinet C926-Billboard-Sliders full-bleed dark hero.
+   Visual values extracted from source computed styles (see migration-work/carousel-hero-extracted.css). */
+
+/* --- Full-bleed override (EDS section wrapper caps width at 1200px) --- */
+main .section:has(.carousel-hero) {
+  margin: 0;
+}
+
+main .section:has(.carousel-hero) > div {
+  max-width: 100%;
+  padding: 0;
+}
+
+/* --- Carousel scaffolding --- */
+.carousel-hero {
+  position: relative;
+  background-color: #000;
+}
+
+.carousel-hero .carousel-hero-slides-container {
+  position: relative;
+}
+
+.carousel-hero .carousel-hero-slides,
+.carousel-hero .carousel-hero-slide-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-hero .carousel-hero-slides {
+  display: flex;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overflow: scroll clip;
+}
+
+.carousel-hero .carousel-hero-slides::-webkit-scrollbar {
+  display: none;
+}
+
+/* --- Slide: full-bleed image with overlaid text --- */
+.carousel-hero .carousel-hero-slide {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 420px;
+  color: #fff;
+}
+
+.carousel-hero .carousel-hero-slide .carousel-hero-slide-image {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.carousel-hero .carousel-hero-slide .carousel-hero-slide-image picture {
+  position: absolute;
+  inset: 0;
+}
+
+.carousel-hero .carousel-hero-slide .carousel-hero-slide-image picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+/* Legibility scrim over the (dark) banner so white text stays readable */
+.carousel-hero .carousel-hero-slide .carousel-hero-slide-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(0 0 0 / 65%) 0%, rgb(0 0 0 / 25%) 45%, rgb(0 0 0 / 0%) 75%);
+}
+
+/* --- Content column: centered 1240 container, left-aligned text --- */
+.carousel-hero .carousel-hero-slide-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  color: #fff;
+  background: none;
+}
+
+.carousel-hero .carousel-hero-slide-content h1,
+.carousel-hero .carousel-hero-slide-content h2 {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.carousel-hero .carousel-hero-slide-content p {
+  margin: 20px 0 0;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: #fff;
+}
+
+/* --- CTA pills (with arrow-circle on the right) --- */
+.carousel-hero .carousel-hero-slide-content p:has(a) {
+  max-width: none;
+  display: inline-block;
+  margin: 24px 16px 0 0;
+}
+
+.carousel-hero .carousel-hero-slide-content p a:any-link {
+  position: relative;
+  display: inline-block;
+  padding: 15px 62px 15px 28px;
+  border: 2px solid #fff;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Second (and later) CTA = transparent / outline variant */
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link {
+  background-color: transparent;
+  color: #fff;
+}
+
+/* arrow circle */
+.carousel-hero .carousel-hero-slide-content p a:any-link::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #000;
+  transform: translateY(-50%);
+}
+
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link::after {
+  background-color: #fff;
+}
+
+/* arrow chevron inside the circle */
+.carousel-hero .carousel-hero-slide-content p a:any-link::before {
+  content: '';
+  position: absolute;
+  right: 27px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 2px 2px 0 0;
+  transform: translateY(-50%) rotate(45deg);
+  z-index: 1;
+}
+
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link::before {
+  border-color: #000;
+}
+
+/* stylelint-disable no-descending-specificity */
+.carousel-hero .carousel-hero-slide-content p a:hover,
+.carousel-hero .carousel-hero-slide-content p a:focus-visible {
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+  color: #fff;
+  text-decoration: none;
+}
+
+.carousel-hero .carousel-hero-slide-content p a:hover::after,
+.carousel-hero .carousel-hero-slide-content p a:focus-visible::after {
+  background-color: #fff;
+}
+
+.carousel-hero .carousel-hero-slide-content p a:hover::before,
+.carousel-hero .carousel-hero-slide-content p a:focus-visible::before {
+  border-color: var(--brand-red);
+}
+
+/* stylelint-enable no-descending-specificity */
+
+/* --- Slide indicators (dots) overlaid at bottom center --- */
+.carousel-hero nav[aria-label] {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.carousel-hero .carousel-hero-slide-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  line-height: 0;
+}
+
+.carousel-hero .carousel-hero-slide-indicator button {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.carousel-hero .carousel-hero-slide-indicator button:disabled,
+.carousel-hero .carousel-hero-slide-indicator button:hover,
+.carousel-hero .carousel-hero-slide-indicator button:focus-visible {
+  background-color: #fff;
+}
+
+/* --- Prev/next arrows: hidden to match source (dots-only nav) --- */
+.carousel-hero .carousel-hero-navigation-buttons {
+  display: none;
+}
+
+/* --- Desktop --- */
+@media (width >= 900px) {
+  .carousel-hero .carousel-hero-slide {
+    min-height: 600px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content {
+    padding: 60px 100px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content h1,
+  .carousel-hero .carousel-hero-slide-content h2 {
+    max-width: 58%;
+    letter-spacing: 0.9px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content p {
+    max-width: 58%;
+    font-size: 24px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content p:has(a) {
+    max-width: none;
+  }
+
+  .carousel-hero .carousel-hero-slide-content p a:any-link {
+    font-size: 18px;
+    padding: 15px 70px 15px 30px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content p a:any-link::after {
+    right: 20px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .carousel-hero .carousel-hero-slide-content p a:any-link::before {
+    right: 30px;
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-feature",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage platform feature tiles (FortiOS / FortiASIC / Global Cloud Network / FortiAI)",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "wide",
+    "purpose": "feature-tiles",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "label + icon + title + description per tile",
+    "buttonCount": 0,
+    "imageCount": 4
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "bordered feature/product tiles with an icon, label, title, and description"
+    ],
+    "notSuitableFor": [
+      "large-image news cards",
+      "full-bleed banners"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}

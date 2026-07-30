@@ -1,0 +1,140 @@
+/* cards-slider — horizontal card slider (news / events)
+   Values extracted from https://www.fortinet.com/ (.ftnt-news / .ftnt-events).
+   Decorated DOM: .cards-slider > ul > li
+     li > .cards-slider-card-image (picture)
+     li > .cards-slider-card-body  (h3 > a, p desc, p > a CTA) */
+
+.cards-slider > ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 24px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.cards-slider > ul > li {
+  flex: 0 0 auto;
+  width: 84%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  background-color: #edecec;
+  border-radius: 20px;
+  box-shadow: rgb(0 0 0 / 75%) 0 10px 20px -14px;
+  overflow: hidden;
+}
+
+/* image sits flush at the top with rounded top corners */
+.cards-slider .cards-slider-card-image {
+  line-height: 0;
+}
+
+.cards-slider .cards-slider-card-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 375 / 224;
+  object-fit: cover;
+}
+
+/* card body */
+.cards-slider .cards-slider-card-body {
+  margin: 0;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* title */
+.cards-slider .cards-slider-card-body h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #000;
+}
+
+.cards-slider .cards-slider-card-body h3 a:any-link {
+  color: #000;
+  text-decoration: none;
+}
+
+.cards-slider .cards-slider-card-body h3 a:hover {
+  text-decoration: underline;
+}
+
+/* description */
+.cards-slider .cards-slider-card-body p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #444;
+}
+
+/* CTA (last paragraph holds the read/register link) */
+.cards-slider .cards-slider-card-body p:last-child {
+  margin-top: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cards-slider .cards-slider-card-body p:last-child a:any-link {
+  color: var(--link-color);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+}
+
+.cards-slider .cards-slider-card-body p:last-child a:hover {
+  color: var(--link-hover-color);
+}
+
+/* red circular arrow icon at the right of the CTA row */
+.cards-slider .cards-slider-card-body p:last-child::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='13' fill='none' stroke='%23da291c' stroke-width='1.5'/%3E%3Cpath d='M8.5 14h10m-4.5-4.5 4.5 4.5-4.5 4.5' fill='none' stroke='%23da291c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+@media (width >= 900px) {
+  .cards-slider > ul {
+    gap: 40px;
+    padding: 4px 0 30px;
+  }
+
+  /* three cards visible per view, matching the source slider */
+  .cards-slider > ul > li {
+    width: calc((100% - 80px) / 3);
+  }
+}
+
+/* Section geometry from source (.ftnt-news / .ftnt-events):
+   section padding 50px 15px 30px, content max-width 1240px, centered.
+   Scoped via :has() to only the section(s) that contain a cards-slider so
+   the heading and the cards stay horizontally aligned and no other block
+   or the global section defaults are affected. */
+main .section:has(> .cards-slider-wrapper) {
+  margin: 0;
+  padding: 50px 0 30px;
+}
+
+main .section:has(> .cards-slider-wrapper) > div {
+  box-sizing: border-box;
+  max-width: 1240px;
+  padding-left: 15px;
+  padding-right: 15px;
+}

@@ -1,0 +1,10 @@
+{
+  "type": "doc",
+  "sites": {
+    "modernization-agent-test": {
+      "previewOrg": "samshao",
+      "previewSite": "modernization-agent-test",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+    }
+  }
+}

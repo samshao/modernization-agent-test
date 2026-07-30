@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-trust",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage Trusted Company/Products/Processes/Partners tiles",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "wide",
+    "purpose": "trust-tiles",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "title + description + CTA per tile",
+    "buttonCount": 1,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "dark text tiles with a colored accent bar, title, description, and CTA"
+    ],
+    "notSuitableFor": [
+      "image cards",
+      "rotating banners"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}

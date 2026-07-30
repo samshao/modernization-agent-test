@@ -1,0 +1,105 @@
+/* cards-panel — Fortinet fabric-area category panels
+   Source: https://www.fortinet.com/ #fabric-area .row.all-boxes
+   Solid-color rounded panels, each with a large centered title and a list of nav links.
+   All values extracted from source computed styles. */
+
+.cards-panel > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* 15px column padding each side => 30px gutter in source */
+}
+
+/* Panel (.white-box in source) */
+.cards-panel > ul > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 450px;
+  padding: 50px 32px 60px;
+  border-radius: 20px;
+  box-shadow: rgb(0 0 0 / 75%) 0 10px 20px -14px;
+  color: #fff;
+}
+
+/* Per-panel solid colors (source panels use a colored watermark image;
+   these are the dominant visible colors, from extracted per-panel accents) */
+.cards-panel > ul > li:nth-child(1) { background-color: #da291c; }            /* Secure Networking – red */
+.cards-panel > ul > li:nth-child(2) { background-color: rgb(48 127 225); }    /* Unified SASE – blue */
+.cards-panel > ul > li:nth-child(3) { background-color: rgb(28 131 136); }    /* Security Operations – teal */
+
+.cards-panel .cards-panel-card-body {
+  width: 100%;
+}
+
+/* Empty image cell (first card-body has no content) */
+.cards-panel .cards-panel-card-body:empty {
+  display: none;
+}
+
+/* Title */
+.cards-panel .cards-panel-card-body h3 {
+  margin: 10px 0;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.cards-panel .cards-panel-card-body h3 a:any-link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.cards-panel .cards-panel-card-body h3 a:hover {
+  text-decoration: underline;
+}
+
+/* Description */
+.cards-panel .cards-panel-card-body > p {
+  margin: 0 0 4px;
+  font-size: 15px;
+  line-height: 20px;
+  color: #fff;
+}
+
+/* Link list */
+.cards-panel .cards-panel-card-body ul {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+.cards-panel .cards-panel-card-body ul li {
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.cards-panel .cards-panel-card-body ul a:any-link {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+  text-decoration: none;
+}
+
+.cards-panel .cards-panel-card-body ul a:hover {
+  text-decoration: underline;
+}
+
+/* Desktop: three panels side by side */
+@media (width >= 900px) {
+  .cards-panel > ul {
+    flex-direction: row;
+  }
+
+  .cards-panel > ul > li {
+    flex: 1 1 0;
+  }
+}
