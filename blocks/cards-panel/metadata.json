@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-panel",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage convergence category panels (Secure Networking / Unified SASE / Security Operations)",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "accent",
+    "density": "spacious",
+    "purpose": "category-panels",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "title + navigation links per panel",
+    "buttonCount": 3,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "bold solid-color category panels",
+      "side-by-side navigational category tiles with title + links"
+    ],
+    "notSuitableFor": [
+      "image cards",
+      "news/event sliders"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}

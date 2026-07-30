@@ -1,0 +1,264 @@
+/* carousel-story — Fortinet customer-story banner
+   Two-column: dark teal text panel + photo. Values from source #banner1. */
+
+/* Full-bleed teal banner (override EDS 1200px section wrapper) */
+.carousel-story-wrapper {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+.carousel-story {
+  position: relative;
+  background-color: #1f4456; /* teal — rgb(31, 68, 86) from source */
+  color: #fff;
+  overflow: hidden;
+}
+
+.carousel-story .carousel-story-slides-container {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.carousel-story .carousel-story-slides {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overflow: scroll clip;
+}
+
+.carousel-story .carousel-story-slides::-webkit-scrollbar {
+  display: none;
+}
+
+/* Slide: stacked on mobile, two columns on desktop */
+.carousel-story .carousel-story-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px 0;
+}
+
+/* Content panel (text first / left) */
+.carousel-story .carousel-story-slide-content {
+  order: -1;
+  color: #fff;
+}
+
+.carousel-story .carousel-story-slide-content h2 {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 40px;
+  color: #fff;
+  margin: 0 0 20px;
+}
+
+/* Base paragraph */
+.carousel-story .carousel-story-slide-content p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #fff;
+  margin: 0 0 16px;
+}
+
+/* Quote (italic) — first paragraph after heading */
+.carousel-story .carousel-story-slide-content h2 + p {
+  font-style: italic;
+  max-width: 550px;
+}
+
+/* Attribution line */
+.carousel-story .carousel-story-slide-content p:has(strong) {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 32px;
+}
+
+.carousel-story .carousel-story-slide-content p:has(strong) strong {
+  font-weight: 700;
+}
+
+/* CTA links: uppercase white text with circular arrow, side by side */
+.carousel-story .carousel-story-slide-content p:has(a) {
+  display: inline-flex;
+  margin: 0 40px 0 0;
+}
+
+.carousel-story .carousel-story-slide-content p:has(a) a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+
+.carousel-story .carousel-story-slide-content p:has(a) a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Circular arrow icon after each CTA (inline SVG: white ring + right arrow) */
+.carousel-story .carousel-story-slide-content p:has(a) a::after {
+  content: '';
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.4"><circle cx="11" cy="11" r="10"/><path d="M7 11h8M11.5 7.5L15 11l-3.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s;
+}
+
+.carousel-story .carousel-story-slide-content p:has(a) a:hover::after {
+  transform: translateX(2px);
+}
+
+/* Image (photo, right side on desktop) */
+.carousel-story .carousel-story-slide-image {
+  line-height: 0;
+}
+
+.carousel-story .carousel-story-slide-image picture {
+  display: block;
+}
+
+.carousel-story .carousel-story-slide-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 23px;
+}
+
+/* Text-only slide fallback: if a slide has no image cell, let content use full width */
+.carousel-story .carousel-story-slide:not(:has(.carousel-story-slide-image)) .carousel-story-slide-content {
+  flex: 1 1 100%;
+  max-width: 900px;
+}
+
+/* --- Slide indicators (dots), centered below the slides --- */
+.carousel-story nav[aria-label] {
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+  padding: 0 0 32px;
+  max-width: 1240px;
+}
+
+.carousel-story .carousel-story-slide-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 0;
+}
+
+.carousel-story .carousel-story-slide-indicator {
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-story .carousel-story-slide-indicator button {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.carousel-story .carousel-story-slide-indicator button:disabled,
+.carousel-story .carousel-story-slide-indicator button:hover,
+.carousel-story .carousel-story-slide-indicator button:focus-visible {
+  background-color: #fff;
+}
+
+/* --- Prev/next arrow buttons, overlaid at the vertical center of the slides --- */
+.carousel-story .carousel-story-navigation-buttons {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.carousel-story .slide-prev,
+.carousel-story .slide-next {
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid rgb(255 255 255 / 60%);
+  border-radius: 50%;
+  background-color: rgb(31 68 86 / 60%);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px 18px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.carousel-story .slide-prev {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>');
+}
+
+.carousel-story .slide-next {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>');
+}
+
+.carousel-story .slide-prev:hover,
+.carousel-story .slide-next:hover,
+.carousel-story .slide-prev:focus-visible,
+.carousel-story .slide-next:focus-visible {
+  border-color: #fff;
+  background-color: rgb(31 68 86 / 90%);
+}
+
+@media (width >= 900px) {
+  .carousel-story .carousel-story-slide {
+    flex-direction: row;
+    align-items: center;
+    gap: 60px;
+    padding: 40px 0;
+    min-height: 540px;
+  }
+
+  .carousel-story .carousel-story-slide-content {
+    flex: 1 1 55%;
+    order: -1;
+  }
+
+  .carousel-story .carousel-story-slide-content h2 {
+    max-width: 682px;
+  }
+
+  .carousel-story .carousel-story-slide-image {
+    flex: 0 0 45%;
+    max-width: 500px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .carousel-story .carousel-story-slide-image img {
+    aspect-ratio: 500 / 515;
+    max-height: 515px;
+  }
+}

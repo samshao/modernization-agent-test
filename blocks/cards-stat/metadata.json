@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-stat",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage FortiGuard Labs global threat statistics grid",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "statistics",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "large value/unit + label per stat",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "statistic / metric grids on dark backgrounds",
+      "text-only number + label tiles"
+    ],
+    "notSuitableFor": [
+      "image cards",
+      "CTA-heavy tiles"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}

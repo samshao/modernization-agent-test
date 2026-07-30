@@ -1,0 +1,39 @@
+{
+  "variantName": "carousel-hero",
+  "baseBlock": "carousel",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage top billboard slider",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "hero-banner",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + paragraph + 2 CTAs per slide",
+    "buttonCount": 2,
+    "imageCount": 7
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "top-of-page hero banners",
+      "rotating promotional banners with full-bleed background images"
+    ],
+    "notSuitableFor": [
+      "inline card grids",
+      "text-only content"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}

@@ -10,6 +10,9 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  readBlockConfig,
+  toClassName,
+  toCamelCase,
 } from './aem.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
@@ -35,6 +38,40 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
     createScriptURL: (input) => input,
     createScript: (input) => input,
   });
+}
+
+/**
+ * Moves all the attributes from a given element to another given element.
+ * @param {Element} from the element to copy attributes from
+ * @param {Element} to the element to copy attributes to
+ */
+export function moveAttributes(from, to, attributes) {
+  if (!attributes) {
+    // eslint-disable-next-line no-param-reassign
+    attributes = [...from.attributes].map(({ nodeName }) => nodeName);
+  }
+  attributes.forEach((attr) => {
+    const value = from.getAttribute(attr);
+    if (value) {
+      to.setAttribute(attr, value);
+      from.removeAttribute(attr);
+    }
+  });
+}
+
+/**
+ * Move instrumentation attributes from a given element to another given element.
+ * @param {Element} from the element to copy attributes from
+ * @param {Element} to the element to copy attributes to
+ */
+export function moveInstrumentation(from, to) {
+  moveAttributes(
+    from,
+    to,
+    [...from.attributes]
+      .map(({ nodeName }) => nodeName)
+      .filter((attr) => attr.startsWith('data-aue-') || attr.startsWith('data-richtext-')),
+  );
 }
 
 /**
@@ -143,14 +180,42 @@ function decorateButtons(main) {
 }
 
 /**
+ * Applies "Section Metadata" blocks to their parent sections as classes/styles,
+ * then removes the block. This project's aem.js decorateSections does not handle
+ * section-metadata, so it is applied here after sections are decorated.
+ * @param {Element} main The main element
+ */
+function decorateSectionMetadata(main) {
+  main.querySelectorAll(':scope > .section > div > .section-metadata').forEach((meta) => {
+    const section = meta.closest('.section');
+    const config = readBlockConfig(meta);
+    Object.keys(config).forEach((key) => {
+      if (key === 'style') {
+        const styles = config.style
+          .split(',')
+          .map((s) => toClassName(s.trim()))
+          .filter((s) => s);
+        styles.forEach((s) => section.classList.add(s));
+      } else {
+        section.dataset[toCamelCase(key)] = config[key];
+      }
+    });
+    // remove the now-consumed metadata block (and its empty wrapper)
+    const wrapper = meta.parentElement;
+    meta.remove();
+    if (wrapper && wrapper.children.length === 0) wrapper.remove();
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
-// eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionMetadata(main);
   decorateBlocks(main);
   decorateButtons(main);
 }

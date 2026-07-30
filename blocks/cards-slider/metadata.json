@@ -1,0 +1,40 @@
+{
+  "variantName": "cards-slider",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-29T19:19:20.885Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/",
+    "originPage": "homepage Latest from Fortinet news slider and Upcoming Events slider",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "wide",
+    "purpose": "news-events",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + title + description + CTA per card",
+    "buttonCount": 1,
+    "imageCount": 3
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "news article card rows",
+      "event card rows",
+      "horizontally scrolling card sliders with image + title + text + CTA"
+    ],
+    "notSuitableFor": [
+      "text-only stat grids",
+      "colored full-height category panels"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-29T19:19:20.885Z"
+  }
+}
