@@ -1,0 +1,53 @@
+/*
+ * brand.css — Zendesk design tokens (extracted from https://www.zendesk.com)
+ * Font: "Vanilla Sans" is Zendesk's proprietary typeface (not on Google/Typekit),
+ * so we use a system sans-serif fallback stack that matches its geometric feel.
+ */
+:root {
+  /* Typography */
+  --heading-font-family: "Vanilla Sans", "Helvetica Neue", arial, sans-serif;
+  --body-font-family: "Vanilla Sans", "Helvetica Neue", arial, sans-serif;
+  --fixed-font-family: "Roboto Mono", menlo, consolas, "Liberation Mono", monospace;
+
+  /* Brand colors */
+  --brand-ink: #11110d;      /* near-black — primary text, hero bg */
+  --brand-green: #203524;    /* dark green — dark sections (CTA/FAQ) */
+  --brand-lime: #d1f470;     /* signature lime — primary buttons/accents */
+  --brand-light: #f6f6f4;    /* off-white surface */
+
+  /* Semantic colors */
+  --background-color: #fff;
+  --light-color: #f6f6f4;
+  --dark-color: #203524;
+  --text-color: #11110d;
+  --link-color: #11110d;
+  --link-hover-color: #3b3b32;
+
+  /* Buttons */
+  --button-primary-bg: #d1f470;
+  --button-primary-color: #11110d;
+  --button-primary-hover-bg: #c2eb52;
+  --button-radius: 16px;
+
+  /* Spacing / layout */
+  --nav-height: 72px;
+  --content-max-width: 1240px;
+  --section-padding: 64px;
+
+  /* Heading sizes (desktop) */
+  --heading-size-xxl: 56px;
+  --heading-size-xl: 40px;
+  --heading-size-l: 30px;
+  --heading-size-m: 24px;
+  --heading-size-s: 20px;
+  --heading-size-xs: 18px;
+}
+
+@media (width >= 900px) {
+  :root {
+    --heading-size-xxl: 72px;
+    --heading-size-xl: 48px;
+    --heading-size-l: 34px;
+    --heading-size-m: 26px;
+  }
+}

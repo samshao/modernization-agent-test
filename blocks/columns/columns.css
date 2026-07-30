@@ -1,6 +1,30 @@
+/*
+ * columns — Zendesk homepage variants
+ * Values extracted from https://www.zendesk.com computed styles (desktop 1440).
+ * Three layouts keyed off the decorate()-added cell-count classes:
+ *   .columns-8-cols  → trust-logo strip (monochrome logos, evenly spaced)
+ *   .columns-3-cols  → big-number stats row (72px figures + small labels)
+ *   .columns-2-cols  → two-up promo (heading/body/CTA | image)
+ *
+ * Rules are grouped by variant for maintainability; the shared base rules are
+ * intentionally more specific than the per-variant overrides, so the
+ * source-ordering heuristic below does not apply.
+ */
+
+/* stylelint-disable no-descending-specificity */
+
+.columns {
+  --columns-stat-color: rgb(112 163 42);      /* datapoints figure green */
+  --columns-cta-bg: var(--brand-lime, #d1f470);
+  --columns-cta-color: var(--brand-ink, #11110d);
+  --columns-promo-gap: 32px;
+}
+
+/* base: cells stack on mobile */
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
 .columns img {
@@ -19,15 +43,214 @@
   display: block;
 }
 
+/* ---------------------------------------------------------------------------
+   LOGO STRIP — .columns-8-cols
+   White section, monochrome logos (pre-rendered), evenly spaced single row.
+   --------------------------------------------------------------------------- */
+.columns-8-cols > div {
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px 40px;
+}
+
+.columns-8-cols > div > div {
+  order: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/*
+ * Imported logo assets are wide 2000x112 wordmark canvases with the mark
+ * centered in a narrow band of horizontal whitespace. object-fit: cover on a
+ * short, fixed-height box crops the side whitespace so the centered mark shows
+ * at a usable size (matching the source's compact ~86x48 rendition).
+ */
+.columns-8-cols img {
+  width: 100px;
+  height: 32px;
+  object-fit: cover;
+}
+
 @media (width >= 900px) {
-  .columns > div {
-    align-items: center;
-    flex-direction: unset;
+  .columns-8-cols > div {
+    flex-wrap: nowrap;
+    justify-content: space-between;
     gap: 24px;
   }
 
-  .columns > div > div {
+  .columns-8-cols img {
+    width: 120px;
+    height: 48px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   STATS ROW — .columns-3-cols
+   Huge figures (22K+, 830M, 4.8B) over small labels, centered.
+   --------------------------------------------------------------------------- */
+.columns-3-cols > div {
+  gap: 40px;
+  text-align: center;
+}
+
+.columns-3-cols > div > div {
+  order: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.columns-3-cols h2 {
+  margin: 0;
+  color: var(--columns-stat-color);
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: normal;
+}
+
+.columns-3-cols p {
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--brand-ink, #11110d);
+}
+
+@media (width >= 900px) {
+  .columns-3-cols > div {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .columns-3-cols > div > div {
     flex: 1;
+  }
+
+  .columns-3-cols h2 {
+    font-size: 72px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   TWO-UP PROMO — .columns-2-cols
+   Heading + body + CTA(s) on one side, image on the other.
+   --------------------------------------------------------------------------- */
+.columns-2-cols h2 {
+  margin: 0 0 24px;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.columns-2-cols h3 {
+  margin: 0 0 16px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.columns-2-cols p {
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--brand-ink, #11110d);
+}
+
+.columns-2-cols .columns-img-col img {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* promo CTAs — first standalone link = lime pill, later links = plain text */
+.columns-2-cols p:has(> a:only-child) {
+  margin: 24px 0 0;
+}
+
+.columns-2-cols p:has(> a:only-child) > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: var(--button-radius, 16px);
+  background-color: var(--columns-cta-bg);
+  color: var(--columns-cta-color);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.columns-2-cols p:has(> a:only-child) > a:hover {
+  background-color: var(--button-primary-hover-bg, #c2eb52);
+  color: var(--columns-cta-color);
+  text-decoration: none;
+}
+
+/* second+ link paragraph reverts to a plain text link */
+.columns-2-cols p:has(> a:only-child) ~ p:has(> a:only-child) {
+  margin-top: 12px;
+}
+
+.columns-2-cols p:has(> a:only-child) ~ p:has(> a:only-child) > a {
+  padding: 10px 0;
+  background-color: transparent;
+  color: var(--brand-ink, #11110d);
+}
+
+.columns-2-cols p:has(> a:only-child) ~ p:has(> a:only-child) > a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .columns-2-cols > div {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--columns-promo-gap);
+  }
+
+  .columns-2-cols > div > div {
     order: unset;
+    flex: 1 1 55%;
+  }
+
+  .columns-2-cols > div > .columns-img-col {
+    flex: 1 1 45%;
+  }
+
+  .columns-2-cols h2 {
+    font-size: 42px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   DARK PROMO CARD — .columns-2-cols inside a dark section
+   Rounded dark-green card (Gartner / Warriors style): off-white text, lime CTA.
+   --------------------------------------------------------------------------- */
+.section.dark .columns-2-cols {
+  background-color: var(--brand-green, #203524);
+  border-radius: 40px;
+  padding: 48px 32px;
+  color: var(--brand-light, #f6f6f4);
+}
+
+.section.dark .columns-2-cols h2,
+.section.dark .columns-2-cols h3,
+.section.dark .columns-2-cols p {
+  color: var(--brand-light, #f6f6f4);
+}
+
+.section.dark .columns-2-cols .columns-img-col img {
+  border-radius: 16px;
+}
+
+@media (width >= 900px) {
+  .section.dark .columns-2-cols {
+    padding: 64px 96px;
   }
 }

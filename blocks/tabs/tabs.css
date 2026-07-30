@@ -1,58 +1,128 @@
+/* Tabs block — Zendesk "AI-first customer service" switcher.
+   Extracted from #ai_first_customer_service. Lives inside .section.dark
+   (dark-green band, white text). Values from source computed styles. */
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  max-width: 1070px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background-color: rgb(17 17 13 / 18%);
+  overflow: hidden;
+}
+
+/* --- Tab list --- */
 .tabs .tabs-list {
   display: flex;
-  gap: 0.5ch;
+  flex-direction: row;
+  gap: 0;
   max-width: 100%;
-  font-size: var(--body-font-size-xs);
   overflow-x: auto;
 }
 
-@media (width >= 600px) {
-  .tabs .tabs-list {
-    font-size: var(--body-font-size-s);
-  }
-}
-
-@media (width >= 900px) {
-  .tabs .tabs-list {
-    font-size: var(--body-font-size-m);
-  }
-}
-
-.tabs .tabs-list button {
-  flex: 0 0 max-content;
+.tabs .tabs-list button.tabs-tab {
+  flex: 0 0 auto;
   margin: 0;
-  border: 1px solid #dadada;
+  border: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
   border-radius: 0;
-  padding: 0.5em;
-  background-color: var(--light-color);
-  color: initial;
-  font-weight: bold;
-  line-height: unset;
-  text-align: initial;
-  text-overflow: unset;
-  overflow: unset;
-  white-space: unset;
+  padding: 20px 24px;
+  background-color: rgb(17 17 13 / 11%);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: start;
+  white-space: normal;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.tabs .tabs-list button p {
+.tabs .tabs-list p {
   margin: 0;
 }
 
-
-.tabs .tabs-list button[aria-selected='true'] {
-  border-bottom: 1px solid var(--background-color);
-  background-color: var(--background-color);
-  cursor: initial;
+.tabs .tabs-list button.tabs-tab:hover {
+  background-color: rgb(17 17 13 / 22%);
 }
 
+.tabs .tabs-list button.tabs-tab[aria-selected='true'] {
+  background-color: rgb(17 17 13 / 32%);
+  cursor: default;
+}
+
+/* --- Panel --- */
 .tabs .tabs-panel {
-  margin-top: -1px;
-  padding: 24px;
-  border: 1px solid #dadada;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 32px 24px;
+  border: 0;
+  overflow: visible;
 }
 
 .tabs .tabs-panel[aria-hidden='true'] {
   display: none;
+}
+
+.tabs .tabs-panel > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.tabs .tabs-panel p {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 23.2px;
+  text-align: center;
+}
+
+.tabs .tabs-panel p:has(picture),
+.tabs .tabs-panel picture {
+  display: block;
+  margin: 0 0 24px;
+  line-height: 0;
+}
+
+.tabs .tabs-panel img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* --- Desktop: left tab column + right panel --- */
+@media (width >= 900px) {
+  .tabs {
+    flex-direction: row;
+  }
+
+  .tabs .tabs-list {
+    flex: 0 0 250px;
+    flex-direction: column;
+    width: 250px;
+    overflow-x: visible;
+  }
+
+  .tabs .tabs-list button.tabs-tab {
+    flex: 0 0 auto;
+    padding: 30px 24px;
+    font-size: 16px;
+  }
+
+  .tabs .tabs-panel {
+    flex: 1 1 auto;
+    padding: 60px 120px;
+  }
+
+  .tabs .tabs-panel img {
+    width: 464px;
+  }
 }

@@ -1,27 +1,175 @@
+/* Block: cards — visual design migrated from zendesk.com card instances.
+   Values extracted from source computed styles (see migration-work/cards-extracted.css). */
+
+/* ---- Grid ---------------------------------------------------------------- */
 .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
+@media (width >= 600px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .cards > ul {
+    /* auto-fit lets 2-card sections stretch to halves and 4-card sections
+       collapse to four narrow columns, matching the source layouts */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+/* ---- Card surface -------------------------------------------------------- */
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f2;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-.cards .cards-card-body {
-  margin: 16px;
-}
-
+/* ---- Image top ----------------------------------------------------------- */
 .cards .cards-card-image {
   line-height: 0;
 }
 
-.cards > ul > li img {
+.cards .cards-card-image img {
+  display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+/* ---- Body ---------------------------------------------------------------- */
+.cards .cards-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 32px 24px;
+}
+
+.cards .cards-card-body > * {
+  margin: 0 0 8px;
+}
+
+.cards .cards-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Titles */
+.cards .cards-card-body h3 {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: var(--text-color);
+  margin: 0 0 16px;
+}
+
+.cards .cards-card-body h4 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text-color);
+  margin: 0 0 16px;
+}
+
+/* Body copy */
+.cards .cards-card-body p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text-color);
+}
+
+/* Eyebrow / tag (Resources cards — first paragraph is the category label) */
+.cards .cards-card-body > p:first-child {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+/* Resource title (paragraph following the eyebrow) */
+.cards .cards-card-body > p:first-child + p {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* CTA text links */
+.cards .cards-card-body a:any-link {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--link-color);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cards .cards-card-body a:hover {
+  color: var(--link-hover-color);
+}
+
+/* Pin the CTA group to the bottom so links align across a row of cards.
+   The first CTA paragraph absorbs the free space; stacked CTAs sit tight. */
+.cards .cards-card-body > p:has(> a:any-link) {
+  margin-top: auto;
+}
+
+.cards .cards-card-body > p:has(> a:any-link) ~ p:has(> a:any-link) {
+  margin-top: 4px;
+}
+
+/* ---- No-images variant (stacked feature items, heading only) ------------- */
+.cards.no-images > ul {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.cards.no-images > ul > li {
+  background-color: rgb(17 17 13 / 5%);
+  border-radius: 24px;
+  overflow: visible;
+}
+
+.cards.no-images .cards-card-body {
+  padding: 32px;
+}
+
+.cards.no-images .cards-card-body h3 {
+  font-size: var(--heading-font-size-m);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0;
+}
+
+@media (width >= 900px) {
+  .cards.no-images > ul > li {
+    border-radius: 40px;
+  }
+
+  .cards.no-images .cards-card-body {
+    padding: 40px;
+  }
+
+  .cards.no-images .cards-card-body h3 {
+    font-size: 26px;
+  }
+}
+
+/* ---- Large 2-up cards (Employee Service / Contact Center) ---------------- */
+.cards > ul:not(:has(> li:nth-child(3))) > li {
+  border-radius: 40px;
+}
+
+.cards > ul:not(:has(> li:nth-child(3))) .cards-card-image img {
+  aspect-ratio: 16 / 9;
 }

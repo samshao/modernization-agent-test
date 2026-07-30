@@ -68,6 +68,63 @@ function bindEvents(block) {
   });
 }
 
+/**
+ * Restructures a testimonial slide's authored content into the design layout:
+ * - logo, blockquote, attribution (name + title) and CTA stay in the text column
+ * - the numeric stat pairs are relocated onto the image as an overlay
+ * Purely a DOM re-org; carousel rotation behavior is untouched.
+ */
+function enhanceTestimonialSlide(slide) {
+  const image = slide.querySelector('.carousel-slide-image');
+  const content = slide.querySelector('.carousel-slide-content');
+  if (!image || !content) return;
+
+  const children = [...content.children];
+  const blockquote = content.querySelector('blockquote');
+  const bqIndex = blockquote ? children.indexOf(blockquote) : children.length;
+
+  // Logo: first paragraph before the quote that holds an image
+  const logo = children.find((el, i) => i < bqIndex && el.tagName === 'P' && el.querySelector('img, picture'));
+  if (logo) logo.classList.add('carousel-slide-logo');
+  if (blockquote) blockquote.classList.add('carousel-slide-quote');
+
+  // Stat paragraphs = text paragraphs before the quote, excluding the logo.
+  // They alternate number, label, number, label…
+  const statParas = children.filter((el, i) => (
+    i < bqIndex && el.tagName === 'P' && el !== logo && !el.querySelector('img, picture')
+  ));
+
+  if (statParas.length >= 2) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('carousel-slide-stats');
+    for (let i = 0; i + 1 < statParas.length; i += 2) {
+      const stat = document.createElement('div');
+      stat.classList.add('carousel-stat');
+      statParas[i].classList.add('carousel-stat-number');
+      statParas[i + 1].classList.add('carousel-stat-label');
+      stat.append(statParas[i], statParas[i + 1]);
+      overlay.append(stat);
+    }
+    image.append(overlay);
+  }
+
+  // Attribution: paragraphs after the quote. The paragraph holding a link is
+  // the CTA; the first plain paragraph is the name, the rest are the title.
+  const afterQuote = children.filter((el, i) => i > bqIndex && el.tagName === 'P');
+  let nameAssigned = false;
+  afterQuote.forEach((p) => {
+    if (p.querySelector('a')) {
+      p.classList.add('carousel-slide-cta');
+      p.querySelector('a').classList.add('carousel-cta-link');
+    } else if (!nameAssigned) {
+      p.classList.add('carousel-attr-name');
+      nameAssigned = true;
+    } else {
+      p.classList.add('carousel-attr-title');
+    }
+  });
+}
+
 function createSlide(row, slideIndex, carouselId) {
   const slide = document.createElement('li');
   slide.dataset.slideIndex = slideIndex;
@@ -78,6 +135,8 @@ function createSlide(row, slideIndex, carouselId) {
     column.classList.add(`carousel-slide-${colIdx === 0 ? 'image' : 'content'}`);
     slide.append(column);
   });
+
+  enhanceTestimonialSlide(slide);
 
   const labeledBy = slide.querySelector('h1, h2, h3, h4, h5, h6');
   if (labeledBy) {
