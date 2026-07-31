@@ -1,6 +1,7 @@
-/* header and nav layout */
+/* header and nav layout — Fortinet dark theme: black bar, white text */
 header .nav-wrapper {
-  background-color: var(--background-color);
+  background-color: var(--brand-black, #000);
+  color: #fff;
   width: 100%;
   z-index: 2;
   position: fixed;
@@ -55,7 +56,13 @@ header nav p {
 }
 
 header nav a:any-link {
-  color: currentcolor;
+  color: #fff;
+  text-decoration: none;
+}
+
+header nav a:any-link:hover {
+  color: #fff;
+  text-decoration: underline;
 }
 
 /* hamburger */
@@ -72,8 +79,8 @@ header nav .nav-hamburger button {
   border: 0;
   border-radius: 0;
   padding: 0;
-  background-color: var(--background-color);
-  color: inherit;
+  background-color: transparent;
+  color: #fff;
   overflow: initial;
   text-overflow: initial;
   white-space: initial;
@@ -242,10 +249,11 @@ header nav .nav-sections ul > li > ul > li {
     display: block;
     position: absolute;
     left: -24px;
-    width: 200px;
+    width: 220px;
     top: 150%;
     padding: 16px;
-    background-color: var(--light-color);
+    background-color: #1a1a1a;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
     white-space: initial;
   }
 
@@ -258,7 +266,7 @@ header nav .nav-sections ul > li > ul > li {
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--light-color);
+    border-bottom: 8px solid #1a1a1a;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
