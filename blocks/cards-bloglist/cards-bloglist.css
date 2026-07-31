@@ -1,27 +1,69 @@
+/* cards-bloglist — Fortinet "Latest Blogs" text-only card grid.
+   Values extracted from source computed styles at fortinet.com/blog
+   (section.b3-blog-list). No images in this variant. */
+
 .cards-bloglist > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  grid-gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 15px;
 }
 
 .cards-bloglist > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  background-color: #f0f0f0;
+  border-radius: 15px;
+  box-shadow: rgb(0 0 0 / 8%) 0 0 4px 0;
 }
 
 .cards-bloglist .cards-bloglist-card-body {
-  margin: 16px;
+  margin: 0;
+  padding: 15px;
 }
 
-.cards-bloglist .cards-bloglist-card-image {
-  line-height: 0;
+/* Category label */
+.cards-bloglist .cards-bloglist-card-body h3 {
+  margin: 0 0 10px;
+  font-family: var(--heading-font-family);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 23px;
+  color: #000;
 }
 
-.cards-bloglist > ul > li img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+/* Post title (link) */
+.cards-bloglist .cards-bloglist-card-body p {
+  margin: 0 0 10px;
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 23px;
+  color: #000;
+}
+
+.cards-bloglist .cards-bloglist-card-body p a:any-link {
+  color: #000;
+  font-size: 15px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.cards-bloglist .cards-bloglist-card-body p a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* Byline (author + date) — last paragraph */
+.cards-bloglist .cards-bloglist-card-body p:last-child {
+  margin: 0;
+  font-size: 12px;
+  line-height: 20px;
+  color: #000;
+}
+
+@media (width >= 900px) {
+  .cards-bloglist > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

@@ -1,27 +1,153 @@
+/* Block: cards-featured — Fortinet blog featured posts
+   One large main card + stacked secondary cards. Each card is a background
+   image with a category eyebrow overlaid top-left and the title bottom-left. */
+
 .cards-featured > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  grid-gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 
-.cards-featured > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+.cards-featured-card {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--brand-black);
+  aspect-ratio: 16 / 10;
 }
 
-.cards-featured .cards-featured-card-body {
-  margin: 16px;
+.cards-featured-card-link {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  text-decoration: none;
 }
 
-.cards-featured .cards-featured-card-image {
+.cards-featured-card-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* image fills the card */
+.cards-featured-card-image {
+  position: absolute;
+  inset: 0;
   line-height: 0;
 }
 
-.cards-featured > ul > li img {
+.cards-featured-card-image picture,
+.cards-featured-card-image img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
+}
+
+/* legibility gradient over the image */
+.cards-featured-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 25%) 0%,
+    rgb(0 0 0 / 0%) 30%,
+    rgb(0 0 0 / 0%) 45%,
+    rgb(0 0 0 / 55%) 100%
+  );
+}
+
+/* category eyebrow, top-left */
+.cards-featured-card-kicker {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 2;
+  margin: 0;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* title, bottom-left */
+.cards-featured-card-text {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 2;
+}
+
+.cards-featured-card-text h1,
+.cards-featured-card-text h2,
+.cards-featured-card-text h3,
+.cards-featured-card-text h4,
+.cards-featured-card-text h5,
+.cards-featured-card-text h6 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 1px;
+}
+
+/* card sizing (mobile) */
+.cards-featured-card-main .cards-featured-card-text h1,
+.cards-featured-card-main .cards-featured-card-text h2,
+.cards-featured-card-main .cards-featured-card-text h3 {
+  font-size: 24px;
+}
+
+.cards-featured-card-secondary .cards-featured-card-text h1,
+.cards-featured-card-secondary .cards-featured-card-text h2,
+.cards-featured-card-secondary .cards-featured-card-text h3 {
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+
+/* desktop: main left (2fr, full height) + two secondary stacked right (1fr) */
+@media (width >= 900px) {
+  .cards-featured > ul {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .cards-featured-card {
+    aspect-ratio: auto;
+  }
+
+  .cards-featured-card-main {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: 582px;
+  }
+
+  .cards-featured-card-secondary {
+    grid-column: 2;
+  }
+
+  .cards-featured-card-main .cards-featured-card-text h1,
+  .cards-featured-card-main .cards-featured-card-text h2,
+  .cards-featured-card-main .cards-featured-card-text h3 {
+    font-size: 32px;
+    line-height: 41.6px;
+  }
+
+  .cards-featured-card-secondary .cards-featured-card-text h1,
+  .cards-featured-card-secondary .cards-featured-card-text h2,
+  .cards-featured-card-secondary .cards-featured-card-text h3 {
+    font-size: 19px;
+    line-height: 24.7px;
+  }
 }

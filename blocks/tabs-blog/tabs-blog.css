@@ -1,57 +1,165 @@
+/* Block: tabs-blog — Fortinet "Blog topics" tabbed blog listing.
+   Values extracted from source div.C18-Tabs computed styles. */
+
+/* ---- Tab bar (tablist) ---- */
 .tabs-blog .tabs-blog-list {
   display: flex;
-  gap: 0.5ch;
-  max-width: 100%;
-  font-size: var(--body-font-size-xs);
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 3px;
+  border-top: 2px solid rgb(200 200 200);
+  border-bottom: 2px solid rgb(200 200 200);
   overflow-x: auto;
 }
 
-@media (width >= 600px) {
-  .tabs-blog .tabs-blog-list {
-    font-size: var(--body-font-size-s);
-  }
-}
-
-@media (width >= 900px) {
-  .tabs-blog .tabs-blog-list {
-    font-size: var(--body-font-size-m);
-  }
-}
-
 .tabs-blog .tabs-blog-list button {
-  flex: 0 0 max-content;
+  flex: 0 0 auto;
   margin: 0;
-  border: 1px solid #dadada;
-  border-radius: 0;
-  padding: 0.5em;
-  background-color: var(--light-color);
-  color: initial;
-  font-weight: bold;
-  line-height: unset;
-  text-align: initial;
-  text-overflow: unset;
-  overflow: unset;
-  white-space: unset;
-  transition: background-color 0.2s;
+  border: 0;
+  border-radius: 450px;
+  padding: 12px 18px;
+  background-color: transparent;
+  color: rgb(50 62 72);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .tabs-blog .tabs-blog-list button p {
   margin: 0;
 }
 
-.tabs-blog .tabs-blog-list button[aria-selected='true'] {
-  border-bottom: 1px solid var(--background-color);
-  background-color: var(--background-color);
-  cursor: initial;
+.tabs-blog .tabs-blog-list button:hover {
+  color: var(--brand-red);
 }
 
+.tabs-blog .tabs-blog-list button[aria-selected='true'] {
+  background-color: rgb(48 127 226);
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
+}
+
+@media (width >= 900px) {
+  .tabs-blog .tabs-blog-list {
+    flex-wrap: nowrap;
+    gap: 15px;
+    justify-content: space-between;
+  }
+
+  .tabs-blog .tabs-blog-list button {
+    flex: 1 1 0;
+    padding: 15px;
+    text-align: center;
+  }
+}
+
+/* ---- Panels ---- */
 .tabs-blog .tabs-blog-panel {
-  margin-top: -1px;
-  padding: 24px;
-  border: 1px solid #dadada;
-  overflow: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .tabs-blog .tabs-blog-panel[aria-hidden='true'] {
   display: none;
+}
+
+/* ---- Category group ---- */
+.tabs-blog .tabs-blog-group {
+  margin: 0;
+}
+
+.tabs-blog .tabs-blog-cat {
+  margin: 30px 0 24px;
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  color: rgb(33 31 34);
+}
+
+/* ---- Cards grid (3 posts + See All box) ---- */
+.tabs-blog .tabs-blog-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (width >= 600px) {
+  .tabs-blog .tabs-blog-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .tabs-blog .tabs-blog-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---- Post card ---- */
+.tabs-blog .tabs-blog-card {
+  display: flex;
+  flex-direction: column;
+  color: rgb(51 51 51);
+  text-decoration: none;
+  border-bottom: 3px solid var(--brand-red);
+}
+
+.tabs-blog .tabs-blog-card picture {
+  display: block;
+  line-height: 0;
+}
+
+.tabs-blog .tabs-blog-card img {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.tabs-blog .tabs-blog-card-body {
+  padding: 12px 0 16px;
+}
+
+.tabs-blog .tabs-blog-card-title {
+  margin: 0;
+  font-family: var(--body-family, var(--body-font-family));
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  line-height: 23px;
+  color: rgb(51 51 51);
+}
+
+.tabs-blog .tabs-blog-card:hover .tabs-blog-card-title {
+  color: var(--brand-red);
+  text-decoration: underline;
+}
+
+/* ---- "See All" box ---- */
+.tabs-blog .tabs-blog-see-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 210px;
+  padding: 24px;
+  background-color: var(--brand-red);
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tabs-blog .tabs-blog-see-all:hover {
+  background-color: var(--brand-red-dark);
+  color: #fff;
+  text-decoration: none;
 }
