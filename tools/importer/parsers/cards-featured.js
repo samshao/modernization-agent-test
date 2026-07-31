@@ -23,14 +23,39 @@ export default function parse(element, { document }) {
     const isMain = post.classList.contains('h1-featured__post-main');
 
     // Image — promote lazy-load attrs, skip base64 placeholders.
+    // A usable src is non-empty, not a data: URI, and not a blob: placeholder.
+    // Note: the scraper wraps blob: placeholders in a CDN URL
+    // (https://cdn.../blob:https://site/uuid), so match blob: ANYWHERE, not just
+    // as a prefix — otherwise the placeholder gets accepted as a real image.
+    const isUsableSrc = (s) => !!s && !s.startsWith('data:') && !s.includes('blob:');
     const img = post.querySelector('img');
     let image = null;
     if (img) {
       const lazy = img.getAttribute('data-src') || img.getAttribute('data-original') || img.getAttribute('data-lazy-src');
       const src = img.getAttribute('src');
-      if ((!src || src.startsWith('data:')) && lazy) img.setAttribute('src', lazy);
-      const finalSrc = img.getAttribute('src');
-      if (finalSrc && !finalSrc.startsWith('data:')) image = img;
+      if (!isUsableSrc(src) && isUsableSrc(lazy)) img.setAttribute('src', lazy);
+      if (isUsableSrc(img.getAttribute('src'))) image = img;
+    }
+
+    // Fallback: the real hero image is a CSS background-image on the anchor or a
+    // descendant (the <img> is a base64 placeholder). Extract that URL and build
+    // a real <img> so the featured card renders the photo.
+    if (!image) {
+      const bgHost = [post, ...post.querySelectorAll('*')].find((el) => {
+        const st = el.getAttribute && el.getAttribute('style');
+        return st && /background(-image)?\s*:\s*url\(/i.test(st) && !/url\(\s*['"]?data:/i.test(st);
+      });
+      if (bgHost) {
+        const m = bgHost.getAttribute('style').match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/i);
+        const bgUrl = m && m[1] ? m[1].trim() : '';
+        if (bgUrl && !bgUrl.startsWith('data:')) {
+          const alt = (post.querySelector('.h1-featured__headline') || {}).textContent || '';
+          const newImg = document.createElement('img');
+          newImg.setAttribute('src', bgUrl);
+          newImg.setAttribute('alt', alt.trim());
+          image = newImg;
+        }
+      }
     }
 
     // Category eyebrow.
