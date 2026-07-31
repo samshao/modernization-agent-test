@@ -1,0 +1,41 @@
+{
+  "variantName": "cards-bloglist",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-31T00:12:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/blog",
+    "originPage": "blog landing page - Latest Blogs list (section.b3-blog-list)",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "blog-list",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "category label + post title + byline ('By {author}' + date) per card, card is a link; text-only grid, no images",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "blog/article listing rows without thumbnails",
+      "text-only card grids with category + title + byline",
+      "recent-posts lists where each card links to an article"
+    ],
+    "notSuitableFor": [
+      "card grids that include feature images (use cards-featured)",
+      "numeric statistic grids (use cards-stat)",
+      "product/feature tiles with icons (use cards-feature)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/blog"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-31T00:12:00.000Z"
+  }
+}

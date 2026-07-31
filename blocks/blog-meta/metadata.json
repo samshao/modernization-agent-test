@@ -1,0 +1,41 @@
+{
+  "variantName": "blog-meta",
+  "baseBlock": "blog-meta",
+  "version": "1.0.0",
+  "created": "2026-07-30T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/blog/security-operations/fortiendpoint-expands-security-for-the-ai-era",
+    "originPage": "Fortinet blog post (blog-post template)",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "byline",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "author (linked) + publication date",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "blog post bylines",
+      "article author/date metadata rows",
+      "any 'By {author} | {date}' credit line"
+    ],
+    "notSuitableFor": [
+      "hero sections",
+      "card grids",
+      "content with images or CTAs"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/blog/security-operations/fortiendpoint-expands-security-for-the-ai-era"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-30T00:00:00.000Z"
+  }
+}

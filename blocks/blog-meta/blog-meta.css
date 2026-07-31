@@ -1,0 +1,32 @@
+.blog-meta .blog-meta-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  font-size: var(--body-font-size-s, 16px);
+  color: var(--text-color, #333);
+}
+
+.blog-meta .blog-meta-prefix {
+  color: inherit;
+}
+
+.blog-meta .blog-meta-author a {
+  color: var(--link-color, #da291c);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.blog-meta .blog-meta-author a:hover {
+  text-decoration: underline;
+}
+
+.blog-meta .blog-meta-date {
+  color: var(--text-color-secondary, #6b6b6b);
+}
+
+.blog-meta .blog-meta-date::before {
+  content: "|";
+  margin-right: 6px;
+  color: var(--text-color-secondary, #6b6b6b);
+}

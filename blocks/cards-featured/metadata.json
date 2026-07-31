@@ -1,0 +1,41 @@
+{
+  "variantName": "cards-featured",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-07-31T00:12:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/blog",
+    "originPage": "blog landing page - featured posts row (section.h1-featured)",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "wide",
+    "purpose": "featured-posts",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "feature image + category label + title (+ description on main post) per card, card is a link; promoted 1-large + 2-small grid",
+    "buttonCount": 0,
+    "imageCount": 3
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "blog landing featured/promoted post rows",
+      "editorial hero grids with one large + several small linked cards",
+      "image + category + title card grids where the whole card links"
+    ],
+    "notSuitableFor": [
+      "text-only card grids (use cards-bloglist)",
+      "product/feature tiles with icons (use cards-feature)",
+      "numeric statistic grids (use cards-stat)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/blog"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-31T00:12:00.000Z"
+  }
+}
