@@ -1,0 +1,40 @@
+{
+  "variantName": "tabs-blog",
+  "baseBlock": "tabs",
+  "version": "1.0.0",
+  "created": "2026-07-31T00:12:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/blog",
+    "originPage": "blog landing page - Blog topics tabbed interface (div.C18-Tabs)",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "wide",
+    "purpose": "blog-topics",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "row per tab (label cell + content cell); each panel holds category groups, each group = subheading + linked post cards (image + title + date) + 'See All' link",
+    "buttonCount": 4,
+    "imageCount": 42
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "topic/category browsing tab switchers on listing pages",
+      "tabbed interfaces whose panels contain grouped post cards",
+      "blog landing 'browse by topic' sections"
+    ],
+    "notSuitableFor": [
+      "simple two-panel text tab switchers with no card content",
+      "accordion-style stacked content (use accordion)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/blog"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-31T00:12:00.000Z"
+  }
+}

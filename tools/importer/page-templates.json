@@ -169,6 +169,50 @@
           ]
         }
       ]
+    },
+    {
+      "name": "blog-landing",
+      "urls": [
+        "https://www.fortinet.com/blog"
+      ],
+      "representativeUrl": "https://www.fortinet.com/blog",
+      "coverageGaps": [],
+      "description": "Fortinet blog landing/listing page: featured posts row, latest blogs list, and category tabs (Products & Solutions, Threat Research, Thought Leadership, Corporate) each showing recent post cards.",
+      "blocks": [
+        { "name": "cards-featured", "instances": ["section.h1-featured"] },
+        { "name": "cards-bloglist", "instances": ["section.b3-blog-list.aem-GridColumn"] },
+        { "name": "tabs-blog", "instances": ["div.C18-Tabs"] }
+      ],
+      "sections": [
+        { "id": "rc3", "name": "Featured Posts", "selector": "section.h1-featured", "style": null, "blocks": ["cards-featured"], "defaultContent": [] },
+        { "id": "rc4", "name": "Latest Blogs", "selector": "section.b3-blog-list", "style": null, "blocks": ["cards-bloglist"], "defaultContent": ["section.b3-blog-list h2"] },
+        { "id": "rc6", "name": "Blog Topics Tabs", "selector": "div.C18-Tabs", "style": null, "blocks": ["tabs-blog"], "defaultContent": ["div.C18-Tabs h2"] }
+      ]
+    },
+    {
+      "name": "blog-post",
+      "urls": [
+        "https://www.fortinet.com/blog/security-operations/fortiendpoint-expands-security-for-the-ai-era",
+        "https://www.fortinet.com/blog/security-operations/introducing-fortisoc-one-platform-total-control",
+        "https://www.fortinet.com/blog/ciso-collective/update-on-fortinet-use-of-frontier-ai",
+        "https://www.fortinet.com/blog/industry-trends/while-external-threats-are-driving-security-awareness-internal-risks-are-growing",
+        "https://www.fortinet.com/blog/threat-research/inside-a-trickbot-variant-using-dns-tunneling-for-c2",
+        "https://www.fortinet.com/blog/secure-networking/fortinet-earns-av-comparatives-certification-for-edr-detection-visibility"
+      ],
+      "representativeUrl": "https://www.fortinet.com/blog/security-operations/fortiendpoint-expands-security-for-the-ai-era",
+      "coverageGaps": [],
+      "description": "Fortinet blog article page: category eyebrow + title hero with feature image, author/date byline, long-form article body (headings, paragraphs, inline images/links), tags, and a related-posts grid.",
+      "blocks": [
+        { "name": "hero", "instances": ["section.b4-hero"] },
+        { "name": "blog-meta", "instances": ["section.b15-blog-meta"] },
+        { "name": "cards", "instances": ["section.b12-related"] }
+      ],
+      "sections": [
+        { "id": "rc2", "name": "Post Hero", "selector": "section.b4-hero", "style": null, "blocks": ["hero"], "defaultContent": [] },
+        { "id": "rc3", "name": "Byline Meta", "selector": "section.b15-blog-meta", "style": null, "blocks": ["blog-meta"], "defaultContent": [] },
+        { "id": "rc4", "name": "Article Body", "selector": "div.responsivegrid > div.aem-Grid > div.cmp.cmp-text:nth-of-type(5)", "style": null, "blocks": [], "defaultContent": ["div.responsivegrid > div.aem-Grid > div.cmp.cmp-text:nth-of-type(5)"] },
+        { "id": "rc6", "name": "Related Posts", "selector": "section.b12-related", "style": null, "blocks": ["cards"], "defaultContent": ["section.b12-related h3"] }
+      ]
     }
   ]
 }

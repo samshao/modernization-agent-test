@@ -1,0 +1,44 @@
+/* Blog Meta (byline) — styles extracted from source .b15-blog-meta__container.
+ * Source computed styles (fortinet.com blog article):
+ *   container: font-size 16px, color rgb(33,31,34), line-height 25.6px (1.6), weight 400
+ *   author link: color rgb(220,41,30) (= --brand-red), weight 400, text-decoration none
+ *   prefix "By" + date: same dark text color as container (date is NOT muted grey)
+ *   separator: literal "|" between author and date
+ */
+
+.blog-meta .blog-meta-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--body-font-size-s); /* 16px */
+  line-height: 1.6;
+  color: var(--text-color); /* ~ rgb(33, 31, 34) */
+}
+
+.blog-meta .blog-meta-prefix {
+  color: inherit;
+}
+
+.blog-meta .blog-meta-author a,
+.blog-meta .blog-meta-author a:any-link {
+  color: var(--link-color); /* #da291c — Fortinet red */
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.blog-meta .blog-meta-author a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.blog-meta .blog-meta-date {
+  color: inherit;
+}
+
+.blog-meta .blog-meta-date::before {
+  content: "|";
+  margin-right: 4px;
+  color: inherit;
+}
