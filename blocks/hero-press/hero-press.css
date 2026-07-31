@@ -1,0 +1,100 @@
+/* Press Release Hero (hero-press)
+ * Dark solid banner with a red accent rule, eyebrow category link, title,
+ * subtitle and dateline. Feature image is optional. */
+
+.hero-press-container .hero-press-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-press {
+  position: relative;
+  box-sizing: border-box;
+  padding: 40px 24px;
+  min-height: 240px;
+  background-color: var(--brand-black, #000);
+  background-image: linear-gradient(90deg, #2d2d2d, #1a1a1a);
+  color: var(--dark-text-color, #fff);
+  border-top: 4px solid var(--brand-red, #da291c);
+}
+
+.hero-press > div {
+  max-width: var(--content-max-width, 1240px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-press .hero-press-content {
+  max-width: 900px;
+}
+
+/* Eyebrow category link */
+.hero-press .hero-press-eyebrow {
+  margin: 0 0 12px;
+  font-size: var(--heading-size-xs, 18px);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-press .hero-press-eyebrow a {
+  color: var(--brand-red, #da291c);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero-press .hero-press-eyebrow a:hover {
+  color: var(--dark-text-color, #fff);
+  text-decoration: underline;
+}
+
+/* Title */
+.hero-press h1.hero-press-title,
+.hero-press h2.hero-press-title {
+  margin: 0 0 16px;
+  color: var(--dark-text-color, #fff);
+  font-size: var(--heading-size-xl, 48px);
+  line-height: 1.15;
+}
+
+/* Subtitle */
+.hero-press .hero-press-subtitle {
+  margin: 0 0 20px;
+  color: var(--brand-grey-mid, #e0e0e0);
+  font-size: var(--heading-size-s, 22px);
+  line-height: 1.4;
+}
+
+/* Dateline */
+.hero-press .hero-press-dateline {
+  margin: 0;
+  color: var(--dark-text-color, #fff);
+  font-size: var(--heading-size-xs, 18px);
+  font-weight: 700;
+}
+
+.hero-press .hero-press-dateline strong {
+  font-weight: 700;
+}
+
+/* Optional feature image */
+.hero-press .hero-press-image {
+  margin-top: 24px;
+}
+
+.hero-press .hero-press-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+@media (width >= 900px) {
+  .hero-press {
+    padding: 56px 32px;
+  }
+
+  .hero-press h1.hero-press-title,
+  .hero-press h2.hero-press-title {
+    font-size: var(--heading-size-xxl, 45px);
+  }
+}
