@@ -22,6 +22,17 @@ export default function decorate(block) {
     const bodyCell = cells.find((c) => c !== imageCell) || cells[cells.length - 1];
 
     const picture = imageCell ? imageCell.querySelector('picture') : null;
+    // A usable image has a real src — not empty, a data: URI, or a blob: placeholder.
+    // Note: the importer can wrap a blob: placeholder inside a CDN URL
+    // (e.g. https://cdn.example/.../blob:https://site/uuid?...), so match `blob:`
+    // ANYWHERE in the src, not just as a prefix.
+    const rawImg = picture ? picture.querySelector('img') : null;
+    const rawSrc = rawImg ? (rawImg.getAttribute('src') || '') : '';
+    const hasRealImage = !!rawImg
+      && rawSrc !== ''
+      && !rawSrc.startsWith('data:')
+      && !rawSrc.includes('blob:');
+
     const kicker = bodyCell ? bodyCell.querySelector('p') : null;
     const heading = bodyCell ? bodyCell.querySelector('h1, h2, h3, h4, h5, h6') : null;
     const titleLink = heading ? heading.querySelector('a') : null;
@@ -33,14 +44,17 @@ export default function decorate(block) {
     link.className = 'cards-featured-card-link';
     link.href = href;
 
-    if (picture) {
-      const img = picture.querySelector('img');
-      const optimized = createOptimizedPicture(img.src, img.alt, i === 0, [{ width: '750' }]);
-      moveInstrumentation(img, optimized.querySelector('img'));
+    if (hasRealImage) {
+      const optimized = createOptimizedPicture(rawImg.src, rawImg.alt, i === 0, [{ width: '750' }]);
+      moveInstrumentation(rawImg, optimized.querySelector('img'));
       const imageWrap = document.createElement('div');
       imageWrap.className = 'cards-featured-card-image';
       imageWrap.append(optimized);
       link.append(imageWrap);
+    } else {
+      // No usable image (source served a lazy/placeholder asset). Flag the card
+      // so CSS renders a branded gradient fallback instead of a bare black box.
+      li.classList.add('cards-featured-card-no-image');
     }
 
     if (kicker) {
