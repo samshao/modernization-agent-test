@@ -213,6 +213,50 @@
         { "id": "rc4", "name": "Article Body", "selector": "div.responsivegrid > div.aem-Grid > div.cmp.cmp-text:nth-of-type(5)", "style": null, "blocks": [], "defaultContent": ["div.responsivegrid > div.aem-Grid > div.cmp.cmp-text:nth-of-type(5)"] },
         { "id": "rc6", "name": "Related Posts", "selector": "section.b12-related", "style": null, "blocks": ["cards"], "defaultContent": ["section.b12-related h3"] }
       ]
+    },
+    {
+      "name": "press-release",
+      "urls": [
+        "https://www.fortinet.com/corporate/about-us/newsroom/press-releases/2026/fortinet-expands-fortigate-g-series-with-1200g-and-fortisase-outpost-to-advance-firewall-sase-convergence"
+      ],
+      "representativeUrl": "https://www.fortinet.com/corporate/about-us/newsroom/press-releases/2026/fortinet-expands-fortigate-g-series-with-1200g-and-fortisase-outpost-to-advance-firewall-sase-convergence",
+      "coverageGaps": [],
+      "description": "Fortinet newsroom press release: hero (category eyebrow 'Press Releases', h1 title, subtitle, date line, feature image), two-column body (left sidebar with In Short / Mentions / PR contact + social links; article body with news summary, executive quotes, a spec comparison table, and content sections), and an About Fortinet + legal/trademark footer block. Marketing form snippet excluded.",
+      "blocks": [
+        { "name": "hero-press", "instances": ["div.C941-Product-Hero-Banner"] },
+        { "name": "table", "instances": ["div.C05-Container:nth-of-type(2) table"] }
+      ],
+      "sections": [
+        {
+          "id": "sec1",
+          "name": "Press Release Hero",
+          "selector": "div.C941-Product-Hero-Banner",
+          "style": null,
+          "blocks": ["hero-press"],
+          "defaultContent": []
+        },
+        {
+          "id": "sec2",
+          "name": "Press Release Body",
+          "selector": "div.C05-Container:nth-of-type(2)",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            "div.C05-Container:nth-of-type(2) div.col-8.col-md-12.cta--item",
+            "div.C05-Container:nth-of-type(2) div.col-4"
+          ]
+        },
+        {
+          "id": "sec3",
+          "name": "About Fortinet",
+          "selector": "div.C05-Container:nth-of-type(3)",
+          "style": "light",
+          "blocks": [],
+          "defaultContent": [
+            "div.C05-Container:nth-of-type(3) div.col-12.col-md-12.cta--item"
+          ]
+        }
+      ]
     }
   ]
 }

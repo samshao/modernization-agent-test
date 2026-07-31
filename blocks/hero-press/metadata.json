@@ -1,0 +1,40 @@
+{
+  "variantName": "hero-press",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-07-31T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.fortinet.com/corporate/about-us/newsroom/press-releases/2026/fortinet-expands-fortigate-g-series-with-1200g-and-fortisase-outpost-to-advance-firewall-sase-convergence",
+    "originPage": "Fortinet press release (newsroom)",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "compact",
+    "purpose": "press-hero",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "eyebrow-link + h1 + subtitle + dateline + optional-image",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "press release pages",
+      "newsroom announcement pages",
+      "dark banner article intros with a category eyebrow and dateline"
+    ],
+    "notSuitableFor": [
+      "image-backed marketing heroes (use vanilla hero / image hero variant)",
+      "hero banners with CTA buttons"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/corporate/about-us/newsroom/press-releases/2026/fortinet-expands-fortigate-g-series-with-1200g-and-fortisase-outpost-to-advance-firewall-sase-convergence"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-07-31T00:00:00.000Z"
+  }
+}
