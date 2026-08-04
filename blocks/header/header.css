@@ -94,14 +94,14 @@ header .nav-utility-icon {
 }
 
 header .nav-utility-icon .icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   display: inline-flex;
 }
 
 header .nav-utility-icon img {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 
 header .nav-utility-icon:hover {
