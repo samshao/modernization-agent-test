@@ -405,6 +405,17 @@ header nav .nav-tools p {
     text-decoration: none;
   }
 
+  /* green FortiGuard Labs shield before the link (matches fortinet.com) */
+  header nav .nav-tools a::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: -3px;
+    background: url('/icons/fgl-nav.svg') no-repeat center / contain;
+  }
+
   /* trailing chevron like the source's "Threat Intelligence »" */
   header nav .nav-tools a::after {
     content: ' »';
