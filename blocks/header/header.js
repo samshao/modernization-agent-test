@@ -1,4 +1,4 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { getMetadata, decorateIcons } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
@@ -131,6 +131,24 @@ export default async function decorate(block) {
     if (section) section.classList.add(`nav-${c}`);
   });
 
+  // Utility strip: append the search + language (globe) icon buttons that the
+  // Fortinet top bar carries. These are UI chrome, not authored content.
+  const navUtility = nav.querySelector('.nav-utility');
+  if (navUtility) {
+    const iconWrap = navUtility.querySelector('.default-content-wrapper') || navUtility;
+    const iconGroup = document.createElement('div');
+    iconGroup.className = 'nav-utility-icons';
+    iconGroup.innerHTML = `
+      <button type="button" class="nav-utility-icon" aria-label="Search">
+        <span class="icon icon-search"></span>
+      </button>
+      <button type="button" class="nav-utility-icon" aria-label="Select a language">
+        <span class="icon icon-globe"></span>
+      </button>`;
+    iconWrap.append(iconGroup);
+    decorateIcons(iconGroup);
+  }
+
   const navBrand = nav.querySelector('.nav-brand');
   if (navBrand) {
     const brandLink = navBrand.querySelector('.button');
@@ -172,7 +190,6 @@ export default async function decorate(block) {
 
   // Lift the utility strip out of <nav> so it renders as a full-width black bar
   // above the constrained white main nav (matches the Fortinet header).
-  const navUtility = nav.querySelector('.nav-utility');
   if (navUtility) navWrapper.append(navUtility);
 
   navWrapper.append(nav);

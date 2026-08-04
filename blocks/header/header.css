@@ -34,14 +34,28 @@ header .nav-utility {
 header .nav-utility .default-content-wrapper {
   max-width: 1264px;
   margin: 0 auto;
-  padding: 6px 32px;
+  padding: 11px 32px;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  gap: 24px;
+  gap: 20px;
 }
 
 header .nav-utility p {
   margin: 0;
+  position: relative;
+}
+
+/* vertical "|" separators between the text links */
+header .nav-utility p + p::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 12px;
+  background-color: rgb(255 255 255 / 35%);
 }
 
 header .nav-utility .default-content-wrapper a:any-link {
@@ -58,10 +72,45 @@ header .nav-utility .default-content-wrapper a:any-link:hover {
   text-decoration: none;
 }
 
+/* search + language icon buttons */
+header .nav-utility-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 8px;
+}
+
+header .nav-utility-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+header .nav-utility-icon .icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+}
+
+header .nav-utility-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+header .nav-utility-icon:hover {
+  opacity: 0.7;
+}
+
 @media (width < 900px) {
   header .nav-utility .default-content-wrapper {
-    padding: 6px 24px;
-    gap: 16px;
+    padding: 10px 24px;
+    gap: 14px;
     justify-content: center;
     flex-wrap: wrap;
   }
