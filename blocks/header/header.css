@@ -381,7 +381,7 @@ header nav .nav-sections ul > li > ul > li {
   }
 }
 
-/* tools — Contact Us / How to Buy */
+/* tools — "FortiGuard Labs Threat Intelligence" link (Fortinet-style) */
 header nav .nav-tools {
   grid-area: tools;
 }
@@ -396,8 +396,8 @@ header nav .nav-tools p {
     align-items: center;
     gap: 20px;
     white-space: nowrap;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
   }
 
   header nav .nav-tools a:any-link {
@@ -405,21 +405,13 @@ header nav .nav-tools p {
     text-decoration: none;
   }
 
-  header nav .nav-tools a:hover {
+  /* trailing chevron like the source's "Threat Intelligence »" */
+  header nav .nav-tools a::after {
+    content: ' »';
     color: var(--brand-red, #da291c);
   }
 
-  /* "How to Buy" (2nd tool) rendered as a red pill button, Fortinet-style */
-  header nav .nav-tools p:last-child a:any-link {
-    background-color: var(--brand-red, #da291c);
-    color: #fff;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-weight: 700;
-  }
-
-  header nav .nav-tools p:last-child a:hover {
-    background-color: var(--brand-red-dark, #b71a0f);
-    color: #fff;
+  header nav .nav-tools a:hover {
+    color: var(--brand-red, #da291c);
   }
 }
