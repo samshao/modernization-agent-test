@@ -341,7 +341,7 @@ header nav .nav-tools p {
 }
 
 @media (width >= 900px) {
-  header nav .nav-tools {
+  header nav .nav-tools .default-content-wrapper {
     display: flex;
     align-items: center;
     gap: 20px;
