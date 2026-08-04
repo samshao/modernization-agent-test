@@ -1,35 +1,92 @@
-/* header and nav layout — Fortinet: white main bar, dark text,
-   thin black utility strip along the very top */
+/* header and nav layout — Fortinet: thin black utility strip on top,
+   white main bar with logo + dark nav below */
 header .nav-wrapper {
   background-color: var(--background-color, #fff);
   color: var(--text-color, #333);
-  border-top: 4px solid var(--brand-black, #000);
   box-shadow: 0 1px 0 rgb(0 0 0 / 8%);
   width: 100%;
   z-index: 2;
   position: fixed;
 }
 
+/* generic nav text/link defaults (kept above higher-specificity overrides) */
+header nav p {
+  margin: 0;
+  line-height: 1;
+}
+
+header nav a:any-link {
+  color: var(--text-color, #333);
+  text-decoration: none;
+}
+
+header nav a:any-link:hover {
+  color: var(--link-color, #da291c);
+  text-decoration: none;
+}
+
+/* black utility strip (full-width) — small right-aligned links */
+header .nav-utility {
+  background-color: var(--brand-black, #000);
+  color: #fff;
+}
+
+header .nav-utility .default-content-wrapper {
+  max-width: 1264px;
+  margin: 0 auto;
+  padding: 6px 32px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+}
+
+header .nav-utility p {
+  margin: 0;
+}
+
+header .nav-utility .default-content-wrapper a:any-link {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+header .nav-utility .default-content-wrapper a:any-link:hover {
+  color: var(--brand-red, #da291c);
+  text-decoration: none;
+}
+
+@media (width < 900px) {
+  header .nav-utility .default-content-wrapper {
+    padding: 6px 24px;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
 header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' var(--nav-height)
+    'hamburger brand tools' 64px
     'sections sections sections' 1fr / auto 1fr auto;
   align-items: center;
   gap: 0 24px;
   margin: auto;
   max-width: 1248px;
-  height: var(--nav-height);
+  height: 64px;
   padding: 0 24px;
   font-family: var(--body-font-family);
 }
 
 header nav[aria-expanded='true'] {
   grid-template:
-    'hamburger brand' var(--nav-height)
+    'hamburger brand' 64px
     'sections sections' 1fr
-    'tools tools' var(--nav-height) / auto 1fr;
+    'tools tools' 64px / auto 1fr;
   overflow-y: auto;
   min-height: 100dvh;
 }
@@ -51,21 +108,6 @@ header nav[aria-expanded='true'] {
     min-height: 0;
     overflow: visible;
   }
-}
-
-header nav p {
-  margin: 0;
-  line-height: 1;
-}
-
-header nav a:any-link {
-  color: var(--text-color, #333);
-  text-decoration: none;
-}
-
-header nav a:any-link:hover {
-  color: var(--link-color, #da291c);
-  text-decoration: none;
 }
 
 /* hamburger */
@@ -149,18 +191,29 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 }
 
-/* brand */
+/* brand — Fortinet logo image */
 header .nav-brand {
   grid-area: brand;
-  flex-basis: 128px;
   font-size: var(--heading-font-size-s);
   font-weight: 700;
   line-height: 1;
 }
 
+header .nav-brand p {
+  margin: 0;
+  line-height: 0;
+}
+
 header nav .nav-brand img {
-  width: 128px;
-  height: auto;
+  width: auto;
+  height: 26px;
+  display: block;
+}
+
+@media (width >= 900px) {
+  header nav .nav-brand img {
+    height: 30px;
+  }
 }
 
 /* sections */
@@ -184,7 +237,7 @@ header nav .nav-sections ul {
 }
 
 header nav .nav-sections ul > li {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 header nav .nav-sections ul > li > ul {
@@ -234,8 +287,9 @@ header nav .nav-sections ul > li > ul > li {
 
   header nav .nav-sections ul {
     display: flex;
-    gap: 24px;
+    gap: 28px;
     margin: 0;
+    font-size: 15px;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li {
@@ -277,7 +331,45 @@ header nav .nav-sections ul > li > ul > li {
   }
 }
 
-/* tools */
+/* tools — Contact Us / How to Buy */
 header nav .nav-tools {
   grid-area: tools;
+}
+
+header nav .nav-tools p {
+  margin: 0;
+}
+
+@media (width >= 900px) {
+  header nav .nav-tools .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  header nav .nav-tools a:any-link {
+    color: var(--text-color, #333);
+    text-decoration: none;
+  }
+
+  header nav .nav-tools a:hover {
+    color: var(--brand-red, #da291c);
+  }
+
+  /* "How to Buy" (2nd tool) rendered as a red pill button, Fortinet-style */
+  header nav .nav-tools p:last-child a:any-link {
+    background-color: var(--brand-red, #da291c);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  header nav .nav-tools p:last-child a:hover {
+    background-color: var(--brand-red-dark, #b71a0f);
+    color: #fff;
+  }
 }
