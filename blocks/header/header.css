@@ -25,10 +25,11 @@ header nav a:any-link:hover {
   text-decoration: none;
 }
 
-/* black utility strip (full-width) — small right-aligned links */
+/* charcoal utility strip (full-width) — small right-aligned links.
+   Matches fortinet.com: bg rgb(34,34,34), links rgb(227,227,227). */
 header .nav-utility {
-  background-color: var(--brand-black, #000);
-  color: #fff;
+  background-color: #222;
+  color: #e3e3e3;
 }
 
 header .nav-utility .default-content-wrapper {
@@ -59,7 +60,7 @@ header .nav-utility p + p::before {
 }
 
 header .nav-utility .default-content-wrapper a:any-link {
-  color: #fff;
+  color: #e3e3e3;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.4px;
@@ -88,7 +89,7 @@ header .nav-utility-icon {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: #e3e3e3;
   cursor: pointer;
 }
 
@@ -120,22 +121,22 @@ header nav {
   box-sizing: border-box;
   display: grid;
   grid-template:
-    'hamburger brand tools' 64px
+    'hamburger brand tools' 52px
     'sections sections sections' 1fr / auto 1fr auto;
   align-items: center;
   gap: 0 24px;
   margin: auto;
   max-width: 1248px;
-  height: 64px;
+  height: 52px;
   padding: 0 24px;
   font-family: var(--body-font-family);
 }
 
 header nav[aria-expanded='true'] {
   grid-template:
-    'hamburger brand' 64px
+    'hamburger brand' 52px
     'sections sections' 1fr
-    'tools tools' 64px / auto 1fr;
+    'tools tools' 52px / auto 1fr;
   overflow-y: auto;
   min-height: 100dvh;
 }
