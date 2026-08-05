@@ -49,13 +49,20 @@
   flex-direction: column;
 }
 
-/* title */
+/* title — clamped to 3 lines with an ellipsis, matching fortinet.com, so a
+   long headline doesn't push card heights out of alignment with its
+   siblings */
 .cards-slider .cards-slider-card-body h3 {
   margin: 0;
+  display: -webkit-box;
+  overflow: hidden;
   font-size: 18px;
   font-weight: 700;
   line-height: 24px;
+  letter-spacing: 0.7px;
   color: #000;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .cards-slider .cards-slider-card-body h3 a:any-link {
@@ -67,13 +74,20 @@
   text-decoration: underline;
 }
 
-/* description */
+/* description — clamped to 4 lines with an ellipsis, matching fortinet.com */
 .cards-slider .cards-slider-card-body p {
   margin: 10px 0 0;
   font-size: 15px;
   font-weight: 400;
   line-height: 25px;
   color: #444;
+}
+
+.cards-slider .cards-slider-card-body p:not(:last-child) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 /* CTA (last paragraph holds the read/register link) */
@@ -132,9 +146,48 @@ main .section:has(> .cards-slider-wrapper) {
   padding: 50px 0 30px;
 }
 
+/* When this is the News section immediately following the hero, fortinet.com
+   sits it almost flush against the hero (~5px, from the page template's own
+   padding) — the hero's curved bottom edge already provides the visual
+   separation, so the usual 50px top padding above would double up on that
+   and leave too much dead space. Only overrides top padding, so a
+   cards-slider section elsewhere on the page (e.g. Upcoming Events) keeps
+   its normal spacing. */
+main .section:has(.carousel-hero) + .section:has(> .cards-slider-wrapper) {
+  padding-top: 5px;
+}
+
 main .section:has(> .cards-slider-wrapper) > div {
   box-sizing: border-box;
   max-width: 1240px;
   padding-left: 15px;
   padding-right: 15px;
+}
+
+/* Section eyebrow label ("News") + heading: fortinet.com centers both and
+   styles the eyebrow as a bold red uppercase label (.section-label /
+   .ftnt-news-title's section header on the live site). The eyebrow is
+   authored as a plain paragraph before the heading, with no class of its
+   own, so it's targeted positionally here. Scoped to sections that contain
+   a cards-slider so this doesn't affect eyebrow text elsewhere on the page. */
+main .section:has(> .cards-slider-wrapper) > .default-content-wrapper {
+  text-align: center;
+}
+
+main .section:has(> .cards-slider-wrapper) > .default-content-wrapper > p:first-child {
+  margin: 0;
+  padding: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand-red, #da291c);
+}
+
+/* The eyebrow's own padding-bottom above already provides fortinet.com's
+   gap under the heading, and it wants a much bigger gap before the cards
+   than the global h2 margins give — 0 above (default 0.8em), 50px below
+   (default 0.25em). */
+main .section:has(> .cards-slider-wrapper) > .default-content-wrapper > h2 {
+  margin-top: 0;
+  margin-bottom: 50px;
 }

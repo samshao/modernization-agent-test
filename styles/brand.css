@@ -26,7 +26,7 @@
   /* Spacing / layout */
   --section-padding: 50px;
   --content-max-width: 1240px;
-  --nav-height: 48px;
+  --nav-height: 103px; /* static fallback; header.js measures and corrects this */
 
   /* Heading sizes (desktop) */
   --heading-size-xxl: 45px;

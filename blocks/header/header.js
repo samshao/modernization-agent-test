@@ -210,4 +210,20 @@ export default async function decorate(block) {
 
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // The visible header (.nav-wrapper) is position:fixed, so <header> needs a
+  // same-height spacer (--nav-height) in normal flow to keep it from
+  // overlapping the content below. That height isn't a fixed constant — it
+  // changes whenever the utility bar/nav content changes — so measure it
+  // instead of hardcoding it, or the spacer silently drifts out of sync and
+  // the fixed header ends up covering the top of whatever comes after it.
+  const syncNavHeight = () => {
+    // Skip while the mobile menu is the full-viewport overlay (aria-expanded
+    // on a non-desktop nav) — that height isn't the collapsed header height.
+    if (nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) return;
+    document.documentElement.style.setProperty('--nav-height', `${navWrapper.offsetHeight}px`);
+  };
+  syncNavHeight();
+  new ResizeObserver(syncNavHeight).observe(navWrapper);
+  isDesktop.addEventListener('change', syncNavHeight);
 }
