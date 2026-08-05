@@ -65,3 +65,62 @@
     padding: 0 80px;
   }
 }
+
+/* Section background art: the world-map watermark and green dot-grid are
+   authored as plain images before/after this block (see fortinet.com's
+   #global-scale section). Without positioning they render as huge inline
+   images pushing the heading and stats down the page. Lift them out of flow
+   into full-bleed decorative layers instead. */
+.cards-stat-container {
+  position: relative;
+  z-index: 0; /* establish a stacking context so the negative z-index below is
+                 contained here instead of escaping to the root stacking
+                 context, where it would paint behind the entire page */
+  overflow: hidden;
+}
+
+/* Note: these wrappers are intentionally left position:static. Giving them
+   their own positioning would lift their whole paint layer — including the
+   z-index:-1 picture below — above the .cards-stat-wrapper stats block that
+   follows in DOM order, regardless of the picture's own z-index. Leaving them
+   static means the absolutely-positioned pictures inside are contained by
+   .cards-stat-container itself, sinking below all of its normal-flow
+   children as intended. */
+.cards-stat-container > .default-content-wrapper:first-child picture {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0.5;
+}
+
+.cards-stat-container > .default-content-wrapper:first-child img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.cards-stat-container > .default-content-wrapper:last-child picture {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  bottom: 0;
+  width: 110px;
+}
+
+.cards-stat-container > .default-content-wrapper:last-child img {
+  width: 100%;
+  height: auto;
+}
+
+@media (width >= 900px) {
+  .cards-stat-container > .default-content-wrapper:first-child img {
+    height: 420px;
+  }
+
+  .cards-stat-container > .default-content-wrapper:last-child picture {
+    width: 160px;
+  }
+}

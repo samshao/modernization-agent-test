@@ -103,3 +103,12 @@
     flex: 1 1 0;
   }
 }
+
+/* The import left a second default-content-wrapper after this block containing
+   the per-panel watermark images and duplicate "Secure Networking" / "Unified
+   SASE" / "Security Operations" headings already rendered inside the cards
+   above. It has no layout purpose and was rendering as ~2500px of duplicate
+   content below the panels. Hide it until it's removed from the page content. */
+.cards-panel-container > .default-content-wrapper:last-child {
+  display: none;
+}
