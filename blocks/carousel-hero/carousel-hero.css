@@ -17,6 +17,23 @@ main .section:has(.carousel-hero) > div {
   background-color: #000;
 }
 
+/* Curved white wave cut into the bottom of the hero, matching fortinet.com's
+   .ftnt-custom-background.white/.half-circle-svg — same SVG path and
+   viewBox, just self-hosted as a data URI instead of their DAM asset. Sits
+   above the slide photos (z-index) but below the dot indicators. */
+.carousel-hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1920 / 180;
+  pointer-events: none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 180"><path fill="white" d="M0,0v180h1920V0C1920,0,1055.7,394.4,0,0z"/></svg>') no-repeat bottom / 100% 100%;
+}
+
 .carousel-hero .carousel-hero-slides-container {
   position: relative;
 }
@@ -210,7 +227,7 @@ main .section:has(.carousel-hero) > div {
 /* --- Slide indicators (dots) overlaid at bottom center --- */
 .carousel-hero nav[aria-label] {
   position: absolute;
-  bottom: 28px;
+  bottom: 50px;
   left: 0;
   right: 0;
   z-index: 2;
