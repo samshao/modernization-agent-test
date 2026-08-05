@@ -1,0 +1,59 @@
+/* Press Share (press-share) — press-release control bar: a bold contact link
+   above a row of social share icons. Matches fortinet.com's sidebar bar. */
+
+.press-share {
+  margin: 0 0 40px;
+}
+
+.press-share .press-share-contact {
+  margin: 0 0 16px;
+}
+
+/* social row (declared before the contact link so the lower-specificity
+   :any-link selector precedes the contact :any-link:hover rule) */
+.press-share .press-share-socials ul {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.press-share .press-share-socials li {
+  margin: 0;
+}
+
+.press-share .press-share-socials a:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.press-share .press-share-socials .icon {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+}
+
+.press-share .press-share-socials .icon img {
+  width: 30px;
+  height: 30px;
+}
+
+.press-share .press-share-socials a:hover .icon {
+  opacity: 0.7;
+}
+
+/* contact action link */
+.press-share .press-share-contact a:any-link {
+  display: block;
+  color: var(--text-color, #333);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.press-share .press-share-contact a:any-link:hover {
+  color: var(--brand-red, #da291c);
+}

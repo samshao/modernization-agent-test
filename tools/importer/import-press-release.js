@@ -4,6 +4,7 @@
 // PARSER IMPORTS
 import heroPressParser from './parsers/hero-press.js';
 import tableParser from './parsers/table.js';
+import pressShareParser from './parsers/press-share.js';
 
 // TRANSFORMER IMPORTS
 import cleanupTransformer from './transformers/pr-cleanup.js';
@@ -13,6 +14,7 @@ import sectionsTransformer from './transformers/pr-sections.js';
 const parsers = {
   'hero-press': heroPressParser,
   table: tableParser,
+  'press-share': pressShareParser,
 };
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json (press-release)
@@ -25,6 +27,7 @@ const PAGE_TEMPLATE = {
   blocks: [
     { name: 'hero-press', instances: ['div.C941-Product-Hero-Banner'] },
     { name: 'table', instances: ['div.C05-Container:nth-of-type(2) table'] },
+    { name: 'press-share', instances: ['div.C984-PR-Overview'] },
   ],
   sections: [
     { id: 'sec1', name: 'Press Release Hero', selector: 'div.C941-Product-Hero-Banner', style: null, blocks: ['hero-press'], defaultContent: [] },
