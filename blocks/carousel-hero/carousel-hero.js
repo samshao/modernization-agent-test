@@ -33,18 +33,40 @@ function updateActiveSlide(slide) {
   });
 }
 
+// fortinet.com cross-fades between slides rather than sliding them
+// horizontally, so slides are stacked (CSS) and switching is just an
+// aria-hidden/opacity toggle — no scrolling involved.
 export function showSlide(block, slideIndex = 0) {
   const slides = block.querySelectorAll('.carousel-hero-slide');
   let realSlideIndex = slideIndex < 0 ? slides.length - 1 : slideIndex;
   if (slideIndex >= slides.length) realSlideIndex = 0;
-  const activeSlide = slides[realSlideIndex];
+  updateActiveSlide(slides[realSlideIndex]);
+}
 
-  activeSlide.querySelectorAll('a').forEach((link) => link.removeAttribute('tabindex'));
-  block.querySelector('.carousel-hero-slides').scrollTo({
-    top: 0,
-    left: activeSlide.offsetLeft,
-    behavior: 'smooth',
-  });
+// fortinet.com auto-rotates the hero banner; matches its ~6s cadence.
+const AUTOPLAY_DELAY = 6000;
+
+function startAutoplay(block) {
+  let timer;
+
+  const advance = () => {
+    showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
+  };
+
+  const stop = () => clearInterval(timer);
+  const start = () => {
+    stop();
+    timer = setInterval(advance, AUTOPLAY_DELAY);
+  };
+
+  // Pause on hover/focus so the rotation doesn't fight a user reading or
+  // interacting with the current slide (also required for WCAG 2.2.2).
+  block.addEventListener('mouseenter', stop);
+  block.addEventListener('mouseleave', start);
+  block.addEventListener('focusin', stop);
+  block.addEventListener('focusout', start);
+
+  start();
 }
 
 function bindEvents(block) {
@@ -65,14 +87,7 @@ function bindEvents(block) {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
   });
 
-  const slideObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) updateActiveSlide(entry.target);
-    });
-  }, { threshold: 0.5 });
-  block.querySelectorAll('.carousel-hero-slide').forEach((slide) => {
-    slideObserver.observe(slide);
-  });
+  startAutoplay(block);
 }
 
 function createSlide(row, slideIndex, carouselId) {
@@ -149,6 +164,9 @@ export default async function decorate(block) {
 
   container.append(slidesWrapper);
   block.prepend(container);
+
+  const firstSlide = slidesWrapper.querySelector('.carousel-hero-slide');
+  if (firstSlide) updateActiveSlide(firstSlide);
 
   if (!isSingleSlide) {
     bindEvents(block);

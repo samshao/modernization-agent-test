@@ -158,6 +158,22 @@ export default async function decorate(block) {
     }
   }
 
+  // "FortiGuard Labs Threat Intelligence" — wrap the "FortiGuard Labs" prefix
+  // in its own span so it can be colored green independently of the rest of
+  // the link text, matching fortinet.com's markup.
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    const toolsLink = navTools.querySelector('a');
+    const prefix = 'FortiGuard Labs';
+    if (toolsLink && !toolsLink.querySelector('span') && toolsLink.textContent.startsWith(prefix)) {
+      const rest = toolsLink.textContent.slice(prefix.length);
+      toolsLink.textContent = '';
+      const label = document.createElement('span');
+      label.textContent = prefix;
+      toolsLink.append(label, rest);
+    }
+  }
+
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {

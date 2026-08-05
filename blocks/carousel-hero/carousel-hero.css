@@ -28,27 +28,30 @@ main .section:has(.carousel-hero) > div {
   padding: 0;
 }
 
+/* fortinet.com's hero cross-fades between slides rather than sliding them
+   horizontally: every slide is stacked in the same spot (absolute + inset:0)
+   and only its opacity toggles. The container needs an explicit min-height
+   since absolutely-positioned slides don't contribute to its size. */
 .carousel-hero .carousel-hero-slides {
-  display: flex;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  overflow: scroll clip;
-}
-
-.carousel-hero .carousel-hero-slides::-webkit-scrollbar {
-  display: none;
+  position: relative;
+  min-height: 420px;
 }
 
 /* --- Slide: full-bleed image with overlaid text --- */
 .carousel-hero .carousel-hero-slide {
-  position: relative;
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
-  width: 100%;
-  min-height: 420px;
   color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+
+.carousel-hero .carousel-hero-slide[aria-hidden='false'] {
+  opacity: 1;
+  visibility: visible;
 }
 
 .carousel-hero .carousel-hero-slide .carousel-hero-slide-image {
@@ -131,64 +134,75 @@ main .section:has(.carousel-hero) > div {
   transition: background-color 0.2s, color 0.2s;
 }
 
+/* Arrow icon: fortinet.com's own asset — a flat white or dark 26x26 PNG with
+   the ring and arrow baked into one image (self-hosted here rather than
+   hotlinked to fortinet.com). The filled (first) button sits on a white
+   background, so it always uses the dark "-over" variant; the outline
+   (second) button sits on the dark hero photo, so it uses the light
+   variant by default and switches to the dark one on hover, once its own
+   background has turned light gray. */
+.carousel-hero .carousel-hero-slide-content p a:any-link::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  background: url('/icons/hero-button-arrow-over.png') no-repeat center / contain;
+  transform: translateY(-50%);
+  transition: right 0.3s ease-in-out;
+}
+
 /* Second (and later) CTA = transparent / outline variant */
 .carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link {
   background-color: transparent;
   color: #fff;
 }
 
-/* arrow circle */
-.carousel-hero .carousel-hero-slide-content p a:any-link::after {
-  content: '';
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: #000;
-  transform: translateY(-50%);
-}
-
 .carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link::after {
-  background-color: #fff;
-}
-
-/* arrow chevron inside the circle */
-.carousel-hero .carousel-hero-slide-content p a:any-link::before {
-  content: '';
-  position: absolute;
-  right: 27px;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  border: solid #fff;
-  border-width: 2px 2px 0 0;
-  transform: translateY(-50%) rotate(45deg);
-  z-index: 1;
-}
-
-.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:any-link::before {
-  border-color: #000;
+  background-image: url('/icons/hero-button-arrow.png');
 }
 
 /* stylelint-disable no-descending-specificity */
+
+/* fortinet.com's hero CTAs turn light gray with black text on hover — not
+   red — for both the filled and outline button variants. The icon nudges
+   a few pixels right and always switches to the dark variant, since both
+   buttons' backgrounds are light gray by that point. */
 .carousel-hero .carousel-hero-slide-content p a:hover,
 .carousel-hero .carousel-hero-slide-content p a:focus-visible {
-  background-color: var(--brand-red);
-  border-color: var(--brand-red);
-  color: #fff;
+  background-color: #ddd;
+  border-color: #ddd;
+  color: #000;
   text-decoration: none;
 }
 
 .carousel-hero .carousel-hero-slide-content p a:hover::after,
 .carousel-hero .carousel-hero-slide-content p a:focus-visible::after {
-  background-color: #fff;
+  right: 13px;
+  background-image: url('/icons/hero-button-arrow-over.png');
 }
 
-.carousel-hero .carousel-hero-slide-content p a:hover::before,
-.carousel-hero .carousel-hero-slide-content p a:focus-visible::before {
-  border-color: var(--brand-red);
+/* The outline (second) button's rest-state selector above uses two :has()
+   pseudo-classes, giving it higher specificity than a plain ":hover" rule —
+   without this override it would keep its transparent background and white
+   text on hover instead of matching the filled button's light-gray/black
+   treatment. */
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:hover,
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:focus-visible {
+  background-color: #ddd;
+  border-color: #ddd;
+  color: #000;
+}
+
+/* Same specificity problem as above, but for the icon: the outline button's
+   ::after rule (light icon) also uses two :has() pseudo-classes, so it beats
+   the plain ":hover::after" rule and the icon stayed light on hover instead
+   of switching to the dark variant. */
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:hover::after,
+.carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:focus-visible::after {
+  right: 13px;
+  background-image: url('/icons/hero-button-arrow-over.png');
 }
 
 /* stylelint-enable no-descending-specificity */
@@ -206,18 +220,18 @@ main .section:has(.carousel-hero) > div {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 20px;
   line-height: 0;
 }
 
 .carousel-hero .carousel-hero-slide-indicator button {
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   margin: 0;
   padding: 0;
   border: 2px solid #fff;
   border-radius: 50%;
-  background-color: transparent;
+  background-color: rgb(255 255 255 / 10%);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -235,7 +249,7 @@ main .section:has(.carousel-hero) > div {
 
 /* --- Desktop --- */
 @media (width >= 900px) {
-  .carousel-hero .carousel-hero-slide {
+  .carousel-hero .carousel-hero-slides {
     min-height: 600px;
   }
 
@@ -245,12 +259,12 @@ main .section:has(.carousel-hero) > div {
 
   .carousel-hero .carousel-hero-slide-content h1,
   .carousel-hero .carousel-hero-slide-content h2 {
-    max-width: 58%;
+    max-width: 70%;
     letter-spacing: 0.9px;
   }
 
   .carousel-hero .carousel-hero-slide-content p {
-    max-width: 58%;
+    max-width: 70%;
     font-size: 24px;
   }
 
@@ -269,7 +283,22 @@ main .section:has(.carousel-hero) > div {
     height: 30px;
   }
 
-  .carousel-hero .carousel-hero-slide-content p a:any-link::before {
-    right: 30px;
+  /* Same specificity as the ::after rule above but declared after it, so it
+     still wins on hover — without this, the desktop right:20px override
+     always beats the hover nudge regardless of hover state, since
+     ":any-link::after" and ":hover::after" have equal specificity and
+     source order is the only tiebreaker. */
+  .carousel-hero .carousel-hero-slide-content p a:hover::after,
+  .carousel-hero .carousel-hero-slide-content p a:focus-visible::after {
+    right: 15px;
+  }
+
+  /* The outline button's :has()-scoped hover::after rule outranks the plain
+     one above (more pseudo-classes), so it would otherwise keep the mobile
+     right:13px nudge at desktop width too — pin it to the same right:15px
+     the filled button uses here. */
+  .carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:hover::after,
+  .carousel-hero .carousel-hero-slide-content p:has(a) ~ p:has(a) a:focus-visible::after {
+    right: 15px;
   }
 }
