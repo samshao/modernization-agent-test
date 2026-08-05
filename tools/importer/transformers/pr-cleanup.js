@@ -49,18 +49,9 @@ export default function transform(hookName, element, payload) {
       hero.querySelectorAll('style, script').forEach((n) => n.remove());
     }
 
-    // Drop the PR-contact + social icon chrome inside the left sidebar
-    // (auxiliary marketing, not page content). The sidebar's "In Short" and
-    // "Mentions In This Article" are kept.
-    const body = element.querySelector('div.C05-Container:nth-of-type(2)');
-    if (body) {
-      body.querySelectorAll('div.C871-Social-Media, div.C871-Social, ul.social, .social-icons, .press-social').forEach((n) => n.remove());
-      // "Contact Fortinet PR" mailto block + any social <ul> of icon links.
-      body.querySelectorAll('a[href^="mailto:pr@"]').forEach((a) => {
-        const container = a.closest('div.C32-Text, li, div') || a;
-        container.remove();
-      });
-    }
+    // NOTE: the left-sidebar "Contact Fortinet PR" + social share icons (the
+    // press-release control bar) are intentionally KEPT. They are migrated by
+    // the press-share block/parser rather than stripped as chrome.
   }
 
   if (hookName === TransformHook.afterTransform) {
