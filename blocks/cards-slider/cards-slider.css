@@ -14,7 +14,16 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+
+  /* fortinet.com's own card row shows no scrollbar at all (it's driven
+     entirely by the prev/next buttons and the progress track below, not by
+     scrolling/dragging the row itself) — keep native scroll so touch swipe
+     and scrollBy() still work, just hide its scrollbar chrome. */
+  scrollbar-width: none;
+}
+
+.cards-slider > ul::-webkit-scrollbar {
+  display: none;
 }
 
 .cards-slider > ul > li {
@@ -38,11 +47,21 @@
   display: block;
   width: 100%;
   aspect-ratio: 375 / 224;
-  object-fit: cover;
+
+  /* fortinet.com's own news-card image (.ftnt-image) computes to
+     object-fit: fill — it stretches to the box instead of cropping — so
+     match that instead of cover, which was cutting off part of the photo. */
+  object-fit: fill;
 }
 
-/* card body */
+/* card body — grows to fill the card (cards in a row already stretch to
+   equal height via the row's default flex align-items:stretch), so the CTA
+   below can be pinned to the bottom regardless of title/description length.
+   fortinet.com achieves the same result via position:absolute;bottom:30px
+   on its CTA link; this is the flexbox equivalent for our markup, where
+   description and CTA are separate paragraphs rather than one merged one. */
 .cards-slider .cards-slider-card-body {
+  flex: 1;
   margin: 0;
   padding: 30px;
   display: flex;
@@ -90,9 +109,12 @@
   -webkit-box-orient: vertical;
 }
 
-/* CTA (last paragraph holds the read/register link) */
+/* CTA (last paragraph holds the read/register link) — margin-top:auto
+   consumes the card body's remaining flex space, pushing this row down to
+   the bottom instead of sitting right under the description. */
 .cards-slider .cards-slider-card-body p:last-child {
-  margin-top: 23px;
+  margin-top: auto;
+  padding-top: 23px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -134,6 +156,86 @@
   .cards-slider > ul > li {
     width: calc((100% - 80px) / 3);
   }
+}
+
+/* Control bar below the cards (fortinet.com's .ftnt-arrow-news): round
+   prev/next buttons sharing one right-pointing arrow icon — prev is the
+   same icon rotated 180deg, rather than a separate asset.
+   On fortinet.com the buttons sit flush against the track's edges (zero
+   gap) rather than pinned to the row's outer edges — the button row is
+   narrower than the row and centered so its buttons land exactly where the
+   track starts/ends. Positioning all three the same way — as percentages
+   of this same box — reproduces that without needing a separate narrower
+   wrapper: position:relative here is the shared containing block for the
+   buttons and the track below. */
+.cards-slider-controls {
+  position: relative;
+  height: 60px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px 15px;
+}
+
+.cards-slider-prev,
+.cards-slider-next {
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 0;
+  background: url("/icons/cards-slider-arrow.png") no-repeat center;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  transform: translateY(-50%);
+}
+
+.cards-slider-prev {
+  /* Right edge lands at the track's left edge (25%), same as fortinet.com. */
+  left: calc(25% - 60px);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.cards-slider-next {
+  /* Left edge lands at the track's right edge (75%), same as fortinet.com. */
+  left: 75%;
+}
+
+.cards-slider-prev:disabled,
+.cards-slider-next:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Progress track between the arrows (fortinet.com's .ftnt-progress — a
+   disabled <input type="range"> there, but purely decorative, so a plain
+   div here). The red bar is a fixed-width thumb that slides along the
+   track, not a fill that grows from the left — see PROGRESS_THUMB_PERCENT
+   in cards-slider.js.
+   fortinet.com's track is only half as wide as the arrow row and centered
+   within it — not stretched to fill the full gap between the two buttons —
+   so it's taken out of the flex flow and centered independently here. */
+.cards-slider-progress {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 50%;
+  height: 4px;
+  border-radius: 10px;
+  background-color: #dcdcdc;
+  transform: translateY(-50%);
+}
+
+.cards-slider-progress-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #db2d27;
+  transition: left 0.4s ease-in-out;
 }
 
 /* Section geometry from source (.ftnt-news / .ftnt-events):
