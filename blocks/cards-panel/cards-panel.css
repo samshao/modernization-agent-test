@@ -1,7 +1,7 @@
 /* cards-panel — Fortinet fabric-area category panels
    Source: https://www.fortinet.com/ #fabric-area .row.all-boxes
-   Solid-color rounded panels, each with a large centered title and a list of nav links.
-   All values extracted from source computed styles. */
+   Solid-color rounded panels, each with a large centered title and a list of nav links,
+   revealed on hover. All values extracted from source computed styles. */
 
 .cards-panel > ul {
   list-style: none;
@@ -12,7 +12,13 @@
   gap: 30px; /* 15px column padding each side => 30px gutter in source */
 }
 
-/* Panel (.white-box in source) */
+/* Panel (.white-box in source). At rest it's a colored panel with a
+   diagonal watermark graphic and just the big centered title (h3 below);
+   the description/link list are collapsed to nothing and only revealed on
+   hover — see the h3-only visible / p+ul collapsed rules below. A fixed
+   height (not min-height) plus overflow:hidden keeps growth on hover
+   deliberate and controlled — with min-height alone, the revealed
+   description+links pushed the flex column to 545px on their own. */
 .cards-panel > ul > li {
   display: flex;
   flex-direction: column;
@@ -21,18 +27,45 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  min-height: 450px;
+  box-sizing: border-box;
+  height: 450px;
   padding: 50px 32px 60px;
   border-radius: 20px;
   box-shadow: rgb(0 0 0 / 75%) 0 10px 20px -14px;
   color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: height 0.5s, box-shadow 0.5s, background-color 0.5s;
 }
 
-/* Per-panel solid colors (source panels use a colored watermark image;
-   these are the dominant visible colors, from extracted per-panel accents) */
-.cards-panel > ul > li:nth-child(1) { background-color: #da291c; }            /* Secure Networking – red */
-.cards-panel > ul > li:nth-child(2) { background-color: rgb(48 127 225); }    /* Unified SASE – blue */
-.cards-panel > ul > li:nth-child(3) { background-color: rgb(28 131 136); }    /* Security Operations – teal */
+/* Per-panel watermark image + fallback color, self-hosted from
+   fortinet.com's own DAM assets (content/dam/fortinet/images/icons/). */
+.cards-panel > ul > li:nth-child(1) {
+  background-color: #da291c; /* Secure Networking */
+  background-image: url("/icons/secure-networking-icon.jpg");
+}
+
+.cards-panel > ul > li:nth-child(2) {
+  background-color: #1c8388; /* Unified SASE */
+  background-image: url("/icons/sase-icon.jpg");
+}
+
+.cards-panel > ul > li:nth-child(3) {
+  background-color: #2cccd3; /* Security Operations */
+  background-image: url("/icons/security-operations-icon.jpg");
+}
+
+/* Hover: panel turns white, loses the watermark, grows a little taller,
+   and its shadow deepens. fortinet.com does this with transform:scale(1.05)
+   instead (growing width too, and centered so it overlaps its neighbors) —
+   using height directly here keeps the growth vertical-only and anchored
+   at the top, so the row doesn't shift sideways or overlap. */
+.cards-panel > ul > li:hover {
+  height: 470px;
+  background-color: #fff;
+  background-image: none;
+  box-shadow: rgb(0 0 0 / 75%) 0 10px 20px -5px;
+}
 
 .cards-panel .cards-panel-card-body {
   width: 100%;
@@ -43,54 +76,96 @@
   display: none;
 }
 
-/* Title */
+/* Title — the only thing visible at rest. */
 .cards-panel .cards-panel-card-body h3 {
   margin: 10px 0;
   font-size: 38px;
   font-weight: 700;
   line-height: 1.1;
   color: #fff;
+  transition: color 0.5s;
 }
 
 .cards-panel .cards-panel-card-body h3 a:any-link {
-  color: #fff;
+  color: inherit;
   text-decoration: none;
 }
 
 .cards-panel .cards-panel-card-body h3 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
-/* Description */
+/* Description + link list — collapsed to nothing at rest (fortinet.com's
+   .box-detail sits at opacity:0 until hover); revealed below the title on
+   hover instead of via source's absolute-positioned overlay, since here
+   they're already in normal flow under the title. */
 .cards-panel .cards-panel-card-body > p {
-  margin: 0 0 4px;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
   font-size: 15px;
   line-height: 20px;
-  color: #fff;
+  color: #000;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.5s, max-height 0.5s;
 }
 
-/* Link list */
 .cards-panel .cards-panel-card-body ul {
-  list-style: none;
-  margin: 20px 0 0;
+  max-height: 0;
+  margin: 0;
   padding: 0;
+  list-style: none;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.5s, max-height 0.5s;
 }
 
+/* font-size/line-height set directly on the li, not just the anchor inside
+   it — otherwise the li's line box falls back to the page's default 18px/
+   1.6 line-height as its "strut" (taller than the 15px/1.4 link text),
+   padding out every row by a few extra invisible pixels. */
 .cards-panel .cards-panel-card-body ul li {
   margin: 0 0 10px;
   padding: 0;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 .cards-panel .cards-panel-card-body ul a:any-link {
   font-size: 15px;
   font-weight: 500;
   line-height: 1.4;
-  color: #fff;
   text-decoration: none;
 }
 
 .cards-panel .cards-panel-card-body ul a:hover {
   text-decoration: underline;
+}
+
+/* Recolor to each panel's accent on hover, once the background behind it
+   has turned white — highest-specificity rules in this file, so they stay
+   last among the selectors sharing their tail element (h3 / ul a). */
+.cards-panel > ul > li:nth-child(1):hover .cards-panel-card-body h3 { color: #da291c; }
+.cards-panel > ul > li:nth-child(2):hover .cards-panel-card-body h3 { color: #307fe1; }
+.cards-panel > ul > li:nth-child(3):hover .cards-panel-card-body h3 { color: #1c8388; }
+
+.cards-panel > ul > li:nth-child(1) .cards-panel-card-body ul a:any-link { color: #da291c; }
+.cards-panel > ul > li:nth-child(2) .cards-panel-card-body ul a:any-link { color: #307fe1; }
+.cards-panel > ul > li:nth-child(3) .cards-panel-card-body ul a:any-link { color: #1c8388; }
+
+.cards-panel > ul > li:hover .cards-panel-card-body > p,
+.cards-panel > ul > li:hover .cards-panel-card-body ul {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.cards-panel > ul > li:hover .cards-panel-card-body > p {
+  margin: 0 0 4px;
+}
+
+.cards-panel > ul > li:hover .cards-panel-card-body ul {
+  margin: 20px 0 0;
 }
 
 /* Desktop: three panels side by side */
@@ -104,11 +179,104 @@
   }
 }
 
-/* The import left a second default-content-wrapper after this block containing
-   the per-panel watermark images and duplicate "Secure Networking" / "Unified
-   SASE" / "Security Operations" headings already rendered inside the cards
-   above. It has no layout purpose and was rendering as ~2500px of duplicate
-   content below the panels. Hide it until it's removed from the page content. */
+/* On fortinet.com the eyebrow + heading sit on plain white — the gray band
+   belongs to a separate sibling container that wraps only the cards row
+   (.fabric-bg), not this whole section. Just top spacing here.
+   overflow:hidden clips the dots watermark's intentional horizontal bleed
+   (matching fortinet.com's own #fabric-area { overflow: hidden }), so it
+   can't push out the page's horizontal scroll extent on narrow viewports.
+   It has to live up here rather than on .cards-panel-wrapper below: the
+   dots watermark reaches up to touch the bottom of the heading, above the
+   wrapper's own top edge, and would get clipped by an overflow:hidden that
+   close to it. */
+.cards-panel-container {
+  position: relative;
+  margin: 0;
+  padding: 50px 0 0;
+  overflow: hidden;
+}
+
+.cards-panel-container > .default-content-wrapper {
+  box-sizing: border-box;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Eyebrow label ("INTEGRATION AND AUTOMATION") + heading, centered — same
+   treatment as the News section's eyebrow (.ftnt-main .section-label). */
+.cards-panel-container > .default-content-wrapper:first-child {
+  text-align: center;
+}
+
+.cards-panel-container > .default-content-wrapper:first-child > p:first-child {
+  margin: 0;
+  padding: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand-red, #da291c);
+}
+
+/* fortinet.com's heading has its own 30px bottom padding in addition to a
+   60px gap to the cards below it (from ancestor margins) — 90px total,
+   not just the 60px external gap. */
+.cards-panel-container > .default-content-wrapper:first-child > h2 {
+  margin: 0 0 90px;
+}
+
+/* Cards wrapper: full-bleed gray band framing just the row of cards
+   (fortinet.com's .fabric-bg) — flush with the top of the cards (no white
+   gap there to hide, since the cards' own opaque backgrounds cover it
+   anyway) and fading back to white ~60px past their bottom, matching the
+   source's extracted gradient stops. The two-class selector is needed to
+   outrank the global "main > .section > div" max-width/padding (1 class +
+   2 type selectors beats a single class), so the band reaches the true
+   viewport edges instead of stopping at the usual 1200px content column. */
+.cards-panel-container > .cards-panel-wrapper {
+  max-width: none;
+  margin: 0;
+  padding: 0 0 60px;
+  background: linear-gradient(0deg, #fff 20%, #edecec 20%, #edecec 90%, #fff 90%);
+}
+
+.cards-panel {
+  position: relative;
+  box-sizing: border-box;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Decorative dots watermark (fortinet.com's .dots-bg), pulled out of the
+   trailing leftover content by cards-panel.js. Bleeds past the right edge
+   of the content column and sits behind the cards — it's prepended before
+   the <ul> in DOM order (see cards-panel.js) and neither element sets a
+   z-index, so plain stacking order alone keeps it behind. top:-90px lines
+   its top edge up with the bottom of the heading above (the heading's own
+   90px margin-bottom, see the h2 rule above). */
+.cards-panel-dots-bg {
+  position: absolute;
+  top: -90px;
+  right: -110px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.cards-panel-dots-bg img {
+  display: block;
+  width: 227px;
+  height: 285px;
+}
+
+/* The import left a second default-content-wrapper after this block
+   containing the per-panel watermark images and duplicate "Secure
+   Networking" / "Unified SASE" / "Security Operations" headings already
+   rendered inside the cards above (plus, it turns out, unrelated leftover
+   content for a later section). cards-panel.js pulls the one useful image
+   (the dots watermark) out before this hides the rest, which has no
+   layout purpose of its own. */
 .cards-panel-container > .default-content-wrapper:last-child {
   display: none;
 }
