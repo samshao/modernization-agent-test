@@ -45,13 +45,20 @@
   padding: 40px 0;
 }
 
-/* Content panel (text first / left) */
+/* Content panel (text first / left). fortinet.com orders this heading →
+   CTA links → quote → attribution; authoring here produced heading →
+   quote → attribution → CTA links instead. Reordering visually via flex
+   rather than fixing the authored order, since h2 + p (targeting the
+   quote below) depends on that DOM adjacency staying intact. */
 .carousel-story .carousel-story-slide-content {
   order: -1;
+  display: flex;
+  flex-direction: column;
   color: #fff;
 }
 
 .carousel-story .carousel-story-slide-content h2 {
+  order: 0;
   font-size: 30px;
   font-weight: 700;
   line-height: 40px;
@@ -61,6 +68,7 @@
 
 /* Base paragraph */
 .carousel-story .carousel-story-slide-content p {
+  order: 2;
   font-size: 16px;
   line-height: 22px;
   color: #fff;
@@ -75,6 +83,7 @@
 
 /* Attribution line */
 .carousel-story .carousel-story-slide-content p:has(strong) {
+  order: 3;
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 32px;
@@ -84,10 +93,14 @@
   font-weight: 700;
 }
 
-/* CTA links: uppercase white text with circular arrow, side by side */
+/* CTA links: uppercase white text with circular arrow, side by side.
+   order:1 places both of these (equal order keeps their relative DOM
+   order, Read the Case Study before Customer Video) right after the
+   heading, ahead of the quote/attribution below. */
 .carousel-story .carousel-story-slide-content p:has(a) {
+  order: 1;
   display: inline-flex;
-  margin: 0 40px 0 0;
+  margin: 0 40px 16px 0;
 }
 
 .carousel-story .carousel-story-slide-content p:has(a) a {
@@ -261,6 +274,14 @@
     aspect-ratio: 500 / 515;
     max-height: 515px;
   }
+
+  /* Scoped to just the image column (55% content / 45% image split above)
+     — at the full slide width, the vertical center where these sit now
+     falls right on the CTA links, which moved up when the content inside
+     was reordered to put them ahead of the quote. */
+  .carousel-story .carousel-story-navigation-buttons {
+    left: 55%;
+  }
 }
 
 /* Slide counter + customer-logo strip: authored as default content after the
@@ -289,9 +310,16 @@
   padding: 0;
 }
 
+/* Logo thumbnails dim to indicate which slide is inactive — fortinet.com
+   sets opacity:1 on the current slide's logo and 0.2 on the rest. Synced
+   to the active slide by carousel-story.js (also made clickable there, to
+   jump straight to that story like the dot indicators already do). */
 .carousel-story-container > .default-content-wrapper ul li {
   flex: 0 0 auto;
   width: 110px;
+  opacity: 0.2;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
 .carousel-story-container > .default-content-wrapper ul img {
@@ -299,4 +327,27 @@
   width: 100%;
   height: auto;
   object-fit: contain;
+}
+
+.carousel-story-container > .default-content-wrapper ul li.active {
+  opacity: 1;
+  cursor: default;
+}
+
+/* "Explore All Customer Stories" — a red pill, matching the CTA styling
+   used elsewhere on the page (e.g. the AI-security section's button). */
+.carousel-story-container > .default-content-wrapper > p:has(a):last-child a:any-link {
+  display: inline-block;
+  padding: 19px 30px;
+  border-radius: 30px;
+  background-color: var(--brand-red, #da291c);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.carousel-story-container > .default-content-wrapper > p:has(a):last-child a:hover {
+  background-color: var(--brand-red-dark, #b71a0f);
 }

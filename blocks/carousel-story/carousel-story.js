@@ -5,6 +5,11 @@ async function fetchPlaceholders() {
   return {};
 }
 
+function getLogoItems(block) {
+  const trailingWrapper = block.closest('.section')?.querySelector(':scope > .default-content-wrapper');
+  return trailingWrapper ? [...trailingWrapper.querySelectorAll(':scope > ul > li')] : [];
+}
+
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel-story');
   const slideIndex = parseInt(slide.dataset.slideIndex, 10);
@@ -31,6 +36,22 @@ function updateActiveSlide(slide) {
       indicator.querySelector('button').setAttribute('disabled', 'true');
     }
   });
+
+  // The customer-logo strip (fortinet.com's own thumbnail nav) is authored
+  // as default content after the block, not part of it — dim every logo
+  // except the active story's, matching the source's opacity:1/0.2 toggle.
+  const logoItems = getLogoItems(block);
+  logoItems.forEach((li, idx) => {
+    li.classList.toggle('active', idx === slideIndex);
+  });
+
+  // "01 / 04" counter (also authored default content, the paragraph just
+  // before the logo <ul>) — keep it in sync with the active slide.
+  const counter = logoItems[0]?.closest('ul')?.previousElementSibling;
+  if (counter && /^\d+\s*\/\s*\d+$/.test(counter.textContent.trim())) {
+    const total = logoItems.length || slides.length;
+    counter.textContent = `${String(slideIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+  }
 }
 
 export function showSlide(block, slideIndex = 0) {
@@ -63,6 +84,12 @@ function bindEvents(block) {
   });
   block.querySelector('.slide-next').addEventListener('click', () => {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
+  });
+
+  // Clicking a logo in the thumbnail strip jumps to that story, same as
+  // clicking a dot indicator.
+  getLogoItems(block).forEach((li, idx) => {
+    li.addEventListener('click', () => showSlide(block, idx));
   });
 
   const slideObserver = new IntersectionObserver((entries) => {
