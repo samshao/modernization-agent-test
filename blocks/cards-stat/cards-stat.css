@@ -9,7 +9,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px 0;
+  gap: 0;
 }
 
 .cards-stat > ul > li {
@@ -19,9 +19,13 @@
   padding: 0;
 }
 
+/* Row spacing comes from this padding-bottom (matching fortinet.com's own
+   .stat-info: padding 0 80px 50px), not a grid row-gap — every item gets it,
+   including the last row, so the section also gets the same breathing room
+   before the CTA button below instead of stopping short. */
 .cards-stat .cards-stat-card-body {
   margin: 0;
-  padding: 0 24px;
+  padding: 0 24px 40px;
   text-align: center;
 }
 
@@ -49,7 +53,10 @@
 @media (width >= 600px) {
   .cards-stat > ul {
     grid-template-columns: repeat(2, 1fr);
-    gap: 50px 0;
+  }
+
+  .cards-stat .cards-stat-card-body {
+    padding: 0 24px 50px;
   }
 }
 
@@ -57,12 +64,12 @@
 @media (width >= 900px) {
   .cards-stat > ul {
     grid-template-columns: repeat(3, 1fr);
-    gap: 50px 0;
-    margin-top: 40px;
+    margin-top: 70px; /* gap from the heading to the first stat row on
+      fortinet.com — was 40px, measured 70px on the source at this width */
   }
 
   .cards-stat .cards-stat-card-body {
-    padding: 0 80px;
+    padding: 0 80px 50px;
   }
 }
 
@@ -76,7 +83,26 @@
   z-index: 0; /* establish a stacking context so the negative z-index below is
                  contained here instead of escaping to the root stacking
                  context, where it would paint behind the entire page */
-  overflow: hidden;
+
+  /* No overflow:hidden here — with it, the browser clips the bottom curve
+     (below) using a rounded-down pixel boundary while the curve's own
+     bottom:0 resolves at sub-pixel precision, leaving a hairline gap of
+     the black background exposed at the seam. The two watermark pictures
+     below are already sized to exactly match this container (inset:0 /
+     fixed width pinned to a corner), so they don't need clipping. */
+}
+
+/* The shared .dark section-metadata style (styles.css) gives every dark
+   section 60px of top padding and 0 margin — fortinet.com's own
+   #global-scale section uses 50px padding-top, and the gap to the next
+   section (the customer-story banner) measures 80px, not 0 — that 80px is
+   pure margin below this section's own dark box, not more dark background,
+   so margin-bottom is the right property, not padding. Needs the "main"
+   prefix to match that rule's own specificity (main .section.dark) — a
+   class-only selector here loses the tie. */
+main .cards-stat-container.dark {
+  padding-top: 50px;
+  margin-bottom: 80px;
 }
 
 /* Note: these wrappers are intentionally left position:static. Giving them
@@ -85,42 +111,157 @@
    follows in DOM order, regardless of the picture's own z-index. Leaving them
    static means the absolutely-positioned pictures inside are contained by
    .cards-stat-container itself, sinking below all of its normal-flow
-   children as intended. */
+   children as intended.
+   fortinet.com's own map (globe-bg.jpg) is a plain CSS background-image
+   covering its section's full height (background-size:cover) — inset:0 +
+   object-fit:cover here matches that instead of a fixed px height, which
+   left solid black exposed below wherever the section grew taller than
+   that height. The image itself is already dark (no separate opacity
+   reduction on the source). */
+
+/* This paragraph only wraps the watermark picture above, which is pulled
+   out of flow (position:absolute) — but the <p> itself stays in flow as an
+   empty box, and its own default margin (top and bottom) was collapsing
+   with the wrapper above it, pushing the eyebrow below it down by an extra
+   ~14px that fortinet.com's own layout doesn't have. */
+.cards-stat-container > .default-content-wrapper:first-child > p:first-child {
+  margin: 0;
+}
+
 .cards-stat-container > .default-content-wrapper:first-child picture {
   position: absolute;
   z-index: -1;
-  top: 0;
-  left: 0;
-  width: 100%;
-  opacity: 0.5;
+  inset: 0;
 }
 
 .cards-stat-container > .default-content-wrapper:first-child img {
   width: 100%;
-  height: 260px;
+  height: 100%;
   object-fit: cover;
   object-position: top;
 }
 
+/* Dot-grid watermark — fortinet.com renders this at its own native size
+   (228x452, no scaling at all) rather than fitting it to a small fixed
+   width. Scaling it down to a small width (as before) meant most of its
+   height fell behind the bottom curve, leaving only a sliver of dots
+   visible above the cut. Left at natural size instead, so the same amount
+   clears the curve as on the source.
+   bottom is negative (not 0) because fortinet.com lets this bleed past its
+   own section, continuing over the white page background below the curve
+   instead of stopping dead at the curve's edge — pinning it flush to this
+   container's bottom looked like the pattern was abruptly cut off right at
+   the curve. -40px is this section's own margin to the next one (verified
+   empty/white), so the bleed lands on blank page background, not on the
+   next section's content. */
 .cards-stat-container > .default-content-wrapper:last-child picture {
   position: absolute;
-  z-index: -1;
-  left: 0;
-  bottom: 0;
-  width: 110px;
+
+  /* fortinet.com paints this dot grid at z-index:999 — above its own bottom
+     curve, not behind it. At -1 (matching the world-map watermark's
+     treatment below) our curve (z-index:1, ::after) painted over the
+     lower rows, blanking out whichever ones fell under it. 2 is enough to
+     clear the curve; it doesn't need the source's literal 999. */
+  z-index: 2;
+  left: -55px; /* fortinet.com positions this partly off-canvas too (checked
+    its computed rect: x sits ~53px left of the viewport edge), clipping the
+    grid's own first column off the left edge of the page — at left:0 (fully
+    on-canvas) all 5 of its columns show, one more than the source's 4. -55px
+    is exactly one column's spacing (the asset's dots repeat every 55px), so
+    it drops precisely the first column and nothing more. */
+  bottom: -40px;
 }
 
 .cards-stat-container > .default-content-wrapper:last-child img {
-  width: 100%;
+  display: block;
+  width: auto;
   height: auto;
+  max-width: 40vw;
 }
 
+/* At the 3-column desktop layout, the grid's own top rows reached up past
+   the "100T" stat into the heading area. Crop them off the top instead of
+   showing the full 452px image — the picture's height shrinks to just
+   what's left below that crop line, and since the img inside keeps its
+   full natural height while anchored to the (unchanged) bottom edge, the
+   rows that disappear are the top ones, not the bottom ones. 411px leaves
+   the grid starting right at the midpoint between the "100T"/"130B" row
+   gap, measured against this layout's fixed (non-responsive) vertical
+   rhythm. */
 @media (width >= 900px) {
-  .cards-stat-container > .default-content-wrapper:first-child img {
-    height: 420px;
+  .cards-stat-container > .default-content-wrapper:last-child picture {
+    width: 228px;
+    height: 411px;
+    overflow: hidden;
   }
 
-  .cards-stat-container > .default-content-wrapper:last-child picture {
-    width: 160px;
+  .cards-stat-container > .default-content-wrapper:last-child img {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 228px;
+    height: 452px;
+    max-width: none;
   }
+}
+
+/* Eyebrow ("FortiGuard Labs") — green here, not the usual red, matching
+   this dark section's accent. */
+.cards-stat-container > .default-content-wrapper:first-child > p:nth-child(2) {
+  margin: 0;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #3cb17e;
+}
+
+/* fortinet.com's heading sits flush against the eyebrow above it (0 gap) —
+   the default heading margin-top (~38px at this font-size) otherwise adds
+   space here that the source doesn't have. The gap to the stat grid below
+   is defined by .cards-stat > ul's own margin-top instead, so the
+   margin-bottom here can stay 0 too rather than fighting that value. */
+.cards-stat-container > .default-content-wrapper:first-child > h2 {
+  margin: 0;
+  text-align: center;
+}
+
+.cards-stat-container > .default-content-wrapper:last-child > p:first-child {
+  text-align: center;
+  margin: 40px 0 0;
+}
+
+/* "Explore Threat Research" CTA — a green pill, distinct from both the
+   site's default button and the AI-security section's red one. */
+.cards-stat-container > .default-content-wrapper:last-child > p:first-child a:any-link {
+  display: inline-block;
+  padding: 10px 50px;
+  border-radius: 20px;
+  background-color: var(--brand-green, #246a4c);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cards-stat-container > .default-content-wrapper:last-child > p:first-child a:hover {
+  background-color: #1c5039;
+}
+
+/* Curved white wave cut into the bottom of the section, matching
+   fortinet.com's .ftnt-custom-background.white/.half-circle-svg — the same
+   technique (and exact SVG path) already used for the hero's curve. */
+.cards-stat-container::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1920 / 180;
+  pointer-events: none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 180"><path fill="white" d="M0,0v180h1920V0C1920,0,1055.7,394.4,0,0z"/></svg>') no-repeat bottom / 100% 100%;
 }

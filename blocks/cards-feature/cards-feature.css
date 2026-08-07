@@ -29,10 +29,19 @@
   box-shadow: rgb(0 0 0 / 20%) 0 4px 8px 0;
   overflow: hidden;
   text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.cards-feature > ul > li:hover {
+  box-shadow: rgb(0 0 0 / 30%) 0 6px 10px 0;
+  transform: scale(1.05);
 }
 
 /* colored header bar (category label) */
 .cards-feature .cards-feature-card-header {
+  box-sizing: border-box; /* without this, min-height (a content-box size by
+    default) adds the 40px of vertical padding on top of it instead of
+    including it, rendering at 104px instead of the intended 64px total */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,4 +114,53 @@
   font-weight: 400;
   line-height: 20px;
   color: #000;
+}
+
+/* Eyebrow ("Cybersecurity Platform") + heading, centered — same treatment
+   as every other section's eyebrow (.section-label). */
+.cards-feature-container {
+  position: relative;
+  overflow: hidden;
+  padding: 50px 0 100px;
+}
+
+.cards-feature-container > .default-content-wrapper:first-child {
+  text-align: center;
+}
+
+.cards-feature-container > .default-content-wrapper:first-child > p:nth-child(2) {
+  margin: 0;
+  padding: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand-red, #da291c);
+}
+
+.cards-feature-container > .default-content-wrapper:first-child > h2 {
+  margin: 0;
+}
+
+/* Decorative watermark (fortinet.com's own .platform-container has this as
+   a plain CSS background-image: url(fabric-bg.png) no-repeat 50% 0% /
+   contain — reproduced here using the same image already migrated into
+   this section's content, instead of fetching fortinet.com's asset
+   directly. Kept in normal flow's first paragraph rather than the block
+   itself, so it doesn't need a JS move; the wrapper stays position:static
+   (not relative) so this negative z-index doesn't lift its whole paint
+   layer above the dark section that follows. */
+.cards-feature-container > .default-content-wrapper:first-child > p:first-child {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.cards-feature-container > .default-content-wrapper:first-child > p:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top;
 }
