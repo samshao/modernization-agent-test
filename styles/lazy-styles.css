@@ -1,1 +1,91 @@
 /* add global styles that can be loaded post LCP here */
+
+/* AI-DRIVEN SECURITY section (fortinet.com's #ai-diagram) — eyebrow,
+   heading, FortiAI wheel diagram, and CTA button. No block backs this
+   content; decorateAiSecurityDiagram() in scripts.js adds the
+   ai-security-container class this is scoped to, inlines the self-hosted
+   diagram SVG, and marks up the CTA link so decorateButtons() turns it
+   into a real button (reusing the global .button.primary styles instead
+   of duplicating them here). */
+main .section.ai-security-container {
+  text-align: center;
+  margin: 0 0 50px;
+}
+
+main .section.ai-security-container > div {
+  max-width: 1240px;
+  padding: 0 15px;
+}
+
+main .section.ai-security-container > div > p:first-child {
+  margin: 0;
+  padding: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand-red, #da291c);
+}
+
+main .section.ai-security-container > div > h2 {
+  margin: 0;
+}
+
+main .section.ai-security-container .ai-security-diagram {
+  margin: 60px auto 0;
+  max-width: 1053px;
+}
+
+main .section.ai-security-container .ai-security-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The per-segment description text (.diagram-text) relies on an external
+   fortinet.com stylesheet for its font-size that isn't present here — left
+   unset it falls back to the SVG default (much smaller than intended). */
+main .section.ai-security-container .diagram-text {
+  font-family: Inter, sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+}
+
+/* Each third's description is hidden until its segment (the invisible
+   #protect-area/#assist-area/#secureai-area overlay path, drawn on top of
+   the colored wedge for exactly this purpose) is hovered — matching
+   fortinet.com's own hover-reveal behavior for this diagram. */
+main .section.ai-security-container #protect-text,
+main .section.ai-security-container #assist-text,
+main .section.ai-security-container #secureai-text {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s;
+}
+
+main .section.ai-security-container svg:has(#protect-area:hover) #protect-text,
+main .section.ai-security-container svg:has(#assist-area:hover) #assist-text,
+main .section.ai-security-container svg:has(#secureai-area:hover) #secureai-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+main .section.ai-security-container .button-wrapper {
+  margin-top: 20px;
+}
+
+/* This CTA is a full pill on fortinet.com (30px radius, uppercase, larger
+   padding) — bigger and rounder than the site's generic .button.primary
+   default (2px radius). Keep reusing that class for its color/hover
+   behavior, just override the shape/sizing to match this section.
+   height is set explicitly (border-box) to match the source's actual
+   rendered 45px — its own padding (19px top/bottom) doesn't literally fit
+   within that height either, so pinning height directly is more reliable
+   than trying to back it out through padding alone. */
+main .section.ai-security-container .button.primary {
+  height: 45px;
+  padding: 19px 30px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}

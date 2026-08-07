@@ -111,6 +111,44 @@ function buildWidgetAutoBlocks(main) {
 }
 
 /**
+ * The "AI-DRIVEN SECURITY" section (fortinet.com's #ai-diagram) has no block
+ * of its own in the migrated content — it's just an eyebrow + heading + CTA
+ * link, with the actual FortiAI wheel diagram missing entirely (the image
+ * that migrated into this section's trailing content is an unrelated
+ * decorative watermark from elsewhere on the source page). Inline the real
+ * diagram (self-hosted, matching the source's own inline SVG exactly) and
+ * mark up the CTA the same way an authored bold link would, so the existing
+ * decorateButtons() below turns it into a real button.
+ * @param {Element} main The container element
+ */
+function decorateAiSecurityDiagram(main) {
+  const heading = main.querySelector('h2#secure-and-transform-your-business-with-ai');
+  if (!heading) return;
+  const wrapper = heading.closest('.default-content-wrapper');
+  const section = heading.closest('.section');
+  if (!wrapper || !section) return;
+  section.classList.add('ai-security-container');
+
+  const ctaLink = wrapper.querySelector('p a[href]');
+  if (ctaLink && !ctaLink.closest('strong')) {
+    const strong = document.createElement('strong');
+    ctaLink.replaceWith(strong);
+    strong.append(ctaLink);
+  }
+
+  // A <figure>, not a <div> — decorateBlocks() below treats any bare
+  // "div.section > div > div" as an unregistered block to load (fetching a
+  // JS/CSS pair that doesn't exist for this one-off diagram).
+  const diagram = document.createElement('figure');
+  diagram.className = 'ai-security-diagram';
+  heading.insertAdjacentElement('afterend', diagram);
+  fetch(`${window.hlx.codeBasePath}/icons/ai-security-diagram.svg`)
+    .then((resp) => (resp.ok ? resp.text() : ''))
+    .then((svg) => { diagram.innerHTML = svg; })
+    .catch(() => {}); // decorative only; leave the div empty on failure
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -216,6 +254,7 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateSectionMetadata(main);
+  decorateAiSecurityDiagram(main);
   decorateBlocks(main);
   decorateButtons(main);
 }
