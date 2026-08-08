@@ -1,7 +1,9 @@
 /* carousel-story — Fortinet customer-story banner
-   Two-column: dark teal text panel + photo. Values from source #banner1. */
+   Two-column: dark text panel + photo. Each story has its own background
+   color on the source (see the .carousel-story-slide rules further down)
+   rather than one shared color — values from #banner1 through #banner4. */
 
-/* Full-bleed teal banner (override EDS 1200px section wrapper) */
+/* Full-bleed banner (override EDS 1200px section wrapper) */
 .carousel-story-wrapper {
   max-width: 100% !important;
   padding: 0 !important;
@@ -9,49 +11,202 @@
 
 .carousel-story {
   position: relative;
-  background-color: #1f4456; /* teal — rgb(31, 68, 86) from source */
+
+  /* Fallback only — updateActiveSlide in carousel-story.js sets this
+     element's own background-color directly (reading it off whichever
+     slide is active, per the .carousel-story-slide[data-slide-index] rules
+     below, each matching fortinet.com's own #banner1-4) — this element
+     itself is full-bleed while the slides are centered/narrower, so it's
+     what actually needs the color to reach the true left/right edges. This
+     teal is just what shows through before that JS has run once, or for a
+     5th+ story beyond what's mapped there. transition here (matching the
+     slides' own opacity transition below) is what makes JS's instant
+     style.backgroundColor assignment still animate smoothly instead of
+     snapping. */
+  background-color: #1f4456;
+  transition: background-color 0.4s ease;
   color: #fff;
-  overflow: hidden;
+
+  /* No overflow restriction here — the floating photo (further below)
+     needs this element to stay fully visible so it can hang past this
+     block's own bottom edge into the white area beneath, matching
+     fortinet.com's own image (which overflows its own equally-
+     unrestricted banner by design). */
+}
+
+/* "Drop in" entrance animation for the photo/dots (desktop) and the real
+   inline image (mobile) — plays every time a slide becomes active, sliding
+   the element down from this section's own top edge into its normal resting
+   spot instead of just appearing there. Restarted from JS (see
+   restartAnimation in carousel-story.js) each time updateActiveSlide runs,
+   since re-adding a class an element already carries doesn't replay a CSS
+   animation on its own. --carousel-story-drop-distance is how far above the
+   resting position (set per-element below, next to each one's own `top` or
+   padding value it needs to match) the element starts. */
+@keyframes carousel-story-drop-in {
+  from {
+    transform: translateY(calc(-1 * var(--carousel-story-drop-distance, 0px)));
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Dot-grid watermark, right side — the actual SVG fortinet.com uses (55
+   individual <rect> dots, fetched and inlined by carousel-story.js, not a
+   CSS tiled-background approximation), rotated 90deg to stand it up into a
+   tall strip the way the source does. Measured directly on fortinet.com:
+   this starts at roughly the vertical midpoint of the photo (photo top
+   83px + half its 515px height ≈ 340px — see .carousel-story-float-photo
+   below for both those numbers), not at this section's own top, and sits
+   right:52px in from this section's own right edge — a real margin, not a
+   bleed like the photo/quote-card get. Lives directly in .carousel-story
+   (which has no overflow restriction, see above). Desktop-only: at mobile
+   widths the image and text stack full-width, leaving no space for this to
+   sit beside them without covering the quote card. */
+@media (width >= 900px) {
+  .carousel-story-dots {
+    position: absolute;
+    z-index: 2;
+    top: 340px;
+    right: 52px;
+    width: 200px;
+    height: 496px;
+    pointer-events: none;
+
+    --carousel-story-drop-distance: 340px; /* matches top:340px above — starting
+      the animation at translateY(-340px) puts it flush with this section's own
+      top edge. */
+  }
+
+  .carousel-story-dots.carousel-story-drop-in {
+    animation: carousel-story-drop-in 0.6s ease-out;
+  }
+
+  .carousel-story-dots svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 496px;
+    height: 200px;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
 }
 
 .carousel-story .carousel-story-slides-container {
   position: relative;
+
+  /* z-index:0 (not just position:relative) is what actually contains the
+     active/incoming slide's own z-index:1 below to comparisons among the
+     slides themselves — position:relative alone doesn't establish a
+     stacking context, so without an explicit z-index here that 1 escaped
+     all the way up to compete directly with (and paint over)
+     .carousel-story-float-photo, a sibling of this element entirely
+     unrelated to which slide is active. */
+  z-index: 0;
   max-width: 1240px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
+/* All slides stack in the same grid cell (grid, not flex, so the container
+   sizes itself to the tallest one automatically instead of needing a
+   guessed height) — switching which one has .active crossfades between
+   them via opacity, see below. */
 .carousel-story .carousel-story-slides {
+  position: relative;
+  display: grid;
+  grid-template-columns: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  overflow: scroll clip;
-}
-
-.carousel-story .carousel-story-slides::-webkit-scrollbar {
-  display: none;
 }
 
 /* Slide: stacked on mobile, two columns on desktop */
 .carousel-story .carousel-story-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 0; /* the incoming slide fading in stays above the outgoing one
+    fading out beneath it (see .active below) — without this the paint
+    order would just follow DOM order instead, which doesn't reliably put
+    whichever slide is animating in on top. */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+
+  /* Overlapping stacked slides would otherwise show through each other
+     during the crossfade (each is fully opaque content-wise, just faded
+     via the opacity above) — this and the quote-block's negative-left
+     bleed both need clipping to this slide's own box, or the bleed paints
+     into whichever slide happens to be stacked next in DOM order. */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 32px;
   padding: 40px 0;
 }
 
-/* Content panel (text first / left). fortinet.com orders this heading →
-   CTA links → quote → attribution; authoring here produced heading →
-   quote → attribution → CTA links instead. Reordering visually via flex
-   rather than fixing the authored order, since h2 + p (targeting the
-   quote below) depends on that DOM adjacency staying intact. */
+.carousel-story .carousel-story-slide.active {
+  z-index: 1;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Each story has its own background color on fortinet.com — measured
+   directly from #banner1 through #banner4, in authored order (IHG, Jersey
+   Mike's, BCAA, Sidel). Keyed to position (data-slide-index), not story
+   identity, since that's the only hook available here — if the authored
+   stories are ever reordered or a 5th is added, these would need
+   revisiting rather than automatically following the right story. */
+.carousel-story .carousel-story-slide[data-slide-index="0"] {
+  background-color: #1f4456;
+}
+
+.carousel-story .carousel-story-slide[data-slide-index="1"] {
+  background-color: #134a7c;
+}
+
+.carousel-story .carousel-story-slide[data-slide-index="2"] {
+  background-color: #161616;
+}
+
+.carousel-story .carousel-story-slide[data-slide-index="3"] {
+  background-color: #e25124;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-story,
+  .carousel-story .carousel-story-slide {
+    transition: none;
+  }
+
+  .carousel-story-dots.carousel-story-drop-in,
+  .carousel-story-float-photo.carousel-story-drop-in::after,
+  .carousel-story .carousel-story-slide-image.carousel-story-drop-in {
+    animation: none;
+  }
+}
+
+/* Content panel. fortinet.com orders this heading → CTA links → quote →
+   attribution; authoring here produced heading → quote → attribution → CTA
+   links instead. Reordering visually via flex rather than fixing the
+   authored order, since h2 + p (targeting the quote below) depends on that
+   DOM adjacency staying intact.
+
+   No order set here at this (mobile) width — the image column is first in
+   the DOM (see createSlide in carousel-story.js) and stays that way,
+   matching fortinet.com's own mobile layout (photo above the text there
+   too). It's flipped to order:-1 (text first / left) only at >=900px below.
+   Putting text first at every width, as an earlier revision did, meant the
+   image's own vertical position depended on however tall that slide's own
+   quote happened to be — different for every slide — so during the
+   opacity crossfade between slides, the incoming and outgoing photos were
+   simultaneously visible at two different heights, reading as the photo
+   "sliding" into place instead of just fading. Image-first removes that
+   variable: nothing of varying height precedes it, so every slide's photo
+   lands at the same position and only genuinely fades. */
 .carousel-story .carousel-story-slide-content {
-  order: -1;
   display: flex;
   flex-direction: column;
   color: #fff;
@@ -75,35 +230,118 @@
   margin: 0 0 16px;
 }
 
-/* Quote (italic) — first paragraph after heading */
-.carousel-story .carousel-story-slide-content h2 + p {
+/* CTA row: "Read the Case Study" and "Customer Video" side by side, like
+   fortinet.com's own <ul class="customer-links"> (display:flex). The two
+   <p>s are wrapped into this div by carousel-story.js specifically so they
+   can share one row — their shared parent above is a column-direction flex
+   container, which stacks every direct child vertically no matter what
+   display/order those children carry themselves. order:1 places the row
+   right after the heading, ahead of the quote/attribution below. */
+.carousel-story .carousel-story-cta-row {
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  margin: 0 0 16px;
+}
+
+.carousel-story .carousel-story-cta-row p {
+  margin: 0;
+}
+
+/* Quote + attribution card: fortinet.com sits these on a dark rounded card
+   behind the text (its own .rectangle div, a fixed 732x230px there)
+   instead of directly on the teal background. carousel-story.js wraps the
+   two into this div so the card's ::before below has something to anchor
+   to. Rather than copying that fixed size (which on the source only
+   reaches this section's left/bottom edges because their layout happens
+   to put the card exactly there at their own measured content height),
+   the ::before below expands to reach this section's actual left and
+   bottom edges directly, so it lands there correctly even when this
+   block's own content height differs from the source's. order:2 places it
+   after the CTA row. */
+.carousel-story .carousel-story-quote-block {
+  position: relative;
+  order: 2;
+  z-index: 0;
+
+  /* padding-top:28px is measured directly on fortinet.com: the dark card
+     (.rectangle) starts 28px above where its quote text starts (310px vs
+     338px from the banner's own top). */
+  padding: 28px 24px 24px 0;
+}
+
+/* bottom:0 reaches the row's true bottom border because the block itself
+   now stretches there (see flex-grow below) — not because of anything
+   here. left is set via a custom property (see updateActiveSlide in
+   carousel-story.js): this block sits inside the 55%-width content
+   column, which is the LEFT portion of a centered row, so its own
+   horizontal center is nowhere near the row's — the usual
+   left:50%;margin-left:-50vw trick for reaching a viewport edge from
+   inside a centered container only cancels out correctly when the
+   element's own containing block IS that centered container, which this
+   one isn't. Measuring the actual offset in JS and cancelling it
+   precisely is what actually reaches the true left border regardless of
+   viewport width. */
+.carousel-story .carousel-story-quote-block::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 24px 0 var(--carousel-story-quote-left-offset, -1000px);
+
+  /* #02121d matches slide 0 (IHG) on fortinet.com — every other slide
+     overrides this with its own card color below, each a custom darker
+     shade of that slide's own background (not a fixed dark navy). */
+  background-color: #02121d;
+  border-radius: 0 100px 0 0;
+}
+
+/* Measured directly on fortinet.com (.rectangle background), same
+   per-slide caveat as the background-colors above: keyed to position, not
+   story identity. */
+.carousel-story .carousel-story-slide[data-slide-index="1"] .carousel-story-quote-block::before {
+  background-color: #00173b;
+}
+
+.carousel-story .carousel-story-slide[data-slide-index="2"] .carousel-story-quote-block::before {
+  background-color: #02060c;
+}
+
+.carousel-story .carousel-story-slide[data-slide-index="3"] .carousel-story-quote-block::before {
+  background-color: #b82f1d;
+}
+
+/* The dot-grid's own fill (set on the SVG file itself, see
+   /icons/carousel-story-dots.svg) matches slides 0-2 (IHG, Jersey Mike's,
+   BCAA) on fortinet.com — measured directly there, all three share that
+   same #02121d despite each having a different background/card color of
+   its own. Slide 3 (Sidel) is the one exception, with its own dark
+   red-orange instead. .carousel-story-dots is a sibling of the slides, not
+   a descendant of any one of them, so this targets it via
+   [data-active-slide] (set by updateActiveSlide in carousel-story.js)
+   rather than the [data-slide-index] used for the overrides above. */
+.carousel-story[data-active-slide="3"] .carousel-story-dots rect {
+  fill: #c81902;
+}
+
+/* Attribution line */
+.carousel-story .carousel-story-quote-block p:has(strong) {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+
+.carousel-story .carousel-story-quote-block p:has(strong) strong {
+  font-weight: 700;
+}
+
+/* Quote (italic) — first paragraph in the card */
+.carousel-story .carousel-story-quote-block > p:first-child {
   font-style: italic;
   max-width: 550px;
 }
 
-/* Attribution line */
-.carousel-story .carousel-story-slide-content p:has(strong) {
-  order: 3;
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 32px;
-}
-
-.carousel-story .carousel-story-slide-content p:has(strong) strong {
-  font-weight: 700;
-}
-
-/* CTA links: uppercase white text with circular arrow, side by side.
-   order:1 places both of these (equal order keeps their relative DOM
-   order, Read the Case Study before Customer Video) right after the
-   heading, ahead of the quote/attribution below. */
-.carousel-story .carousel-story-slide-content p:has(a) {
-  order: 1;
-  display: inline-flex;
-  margin: 0 40px 16px 0;
-}
-
-.carousel-story .carousel-story-slide-content p:has(a) a {
+.carousel-story .carousel-story-cta-row a {
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -115,13 +353,14 @@
   letter-spacing: 0.3px;
 }
 
-.carousel-story .carousel-story-slide-content p:has(a) a:hover {
+.carousel-story .carousel-story-cta-row a:hover {
   color: #fff;
   text-decoration: none;
 }
 
-/* Circular arrow icon after each CTA (inline SVG: white ring + right arrow) */
-.carousel-story .carousel-story-slide-content p:has(a) a::after {
+/* Circular arrow icon after the case-study CTA (inline SVG: white ring +
+   right arrow) */
+.carousel-story .carousel-story-cta-row a::after {
   content: '';
   display: inline-block;
   flex: 0 0 auto;
@@ -133,13 +372,36 @@
   transition: transform 0.2s;
 }
 
-.carousel-story .carousel-story-slide-content p:has(a) a:hover::after {
+.carousel-story .carousel-story-cta-row a:hover::after {
   transform: translateX(2px);
+}
+
+/* The video CTA gets fortinet.com's own play-button icon instead of the
+   case-study link's circular arrow (source: play-overlay class swaps in
+   play-button.png for the same ::after slot). */
+.carousel-story .carousel-story-cta-row a.carousel-story-cta-video::after {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.4"><circle cx="11" cy="11" r="10"/><path d="M9 7.5l6 3.5-6 3.5z" fill="white" stroke="none"/></svg>');
+}
+
+.carousel-story .carousel-story-cta-row a.carousel-story-cta-video:hover::after {
+  transform: none;
 }
 
 /* Image (photo, right side on desktop) */
 .carousel-story .carousel-story-slide-image {
   line-height: 0;
+
+  --carousel-story-drop-distance: 40px; /* matches the slide's own top padding
+    (padding:40px 0 above) — this is the first thing in the slide's flex
+    column now (see the comment on .carousel-story-slide-content above), so
+    starting the animation at translateY(-40px) puts it flush with the
+    slide's own top border, inside that padding, without needing a separate
+    <900px guard: at >=900px this element is visibility:hidden anyway (the
+    floating photo above takes over there), so animating it is a no-op. */
+}
+
+.carousel-story .carousel-story-slide-image.carousel-story-drop-in {
+  animation: carousel-story-drop-in 0.6s ease-out;
 }
 
 .carousel-story .carousel-story-slide-image picture {
@@ -248,9 +510,22 @@
 @media (width >= 900px) {
   .carousel-story .carousel-story-slide {
     flex-direction: row;
-    align-items: center;
+
+    /* stretch (not center): the content column and image need to share
+       this row's full height so the heading can sit at its top and the
+       quote-block can sit at its bottom (both below), matching
+       fortinet.com's own layout — centering the two columns as blocks
+       would leave the heading and quote floating around the middle
+       instead. */
+    align-items: stretch;
     gap: 60px;
-    padding: 40px 0;
+
+    /* No padding here at all: every gap below is a measured margin on the
+       element that owns it instead (matching fortinet.com's own fixed
+       pixel positions exactly — see the h2/cta-row/quote-block rules
+       below), not container padding. min-height matches the source's own
+       banner height (540px) precisely. */
+    padding: 0;
     min-height: 540px;
   }
 
@@ -259,20 +534,99 @@
     order: -1;
   }
 
+  /* Measured directly on fortinet.com (#banner1 h1): margin: 75px 0 20px.
+     margin-top places the heading 75px below the row's own top edge (the
+     image, below, is separately measured at 83px — the two aren't
+     perfectly level on the source either, just close); margin-bottom is
+     the entire gap to the CTA row below (which measures margin:0 on the
+     source, so none of that 20px comes from its side). */
   .carousel-story .carousel-story-slide-content h2 {
     max-width: 682px;
+    margin: 75px 0 20px;
   }
 
+  /* fortinet.com's ul.customer-links measures margin:0 — the 20px gap
+     above comes entirely from the heading's own margin-bottom, and the
+     93px gap below entirely from the quote-block's margin-top (measured:
+     CTA row bottom at 215+30=245px, quote text starting at 338px). Flex
+     items' margins don't collapse the way block siblings' do, so putting
+     the whole gap on one side only (here: zero) avoids double-counting
+     against the heading's margin-bottom above. */
+  .carousel-story .carousel-story-cta-row {
+    margin: 0;
+  }
+
+  .carousel-story .carousel-story-quote-block {
+    margin-top: 93px;
+
+    /* Grows to fill whatever's left of the (stretched, full-row-height)
+       content column after the heading and CTA row above it, so this
+       block's own bottom edge — and its ::before card's bottom:0 — lands
+       exactly on the row's true bottom border, instead of stopping wherever
+       its own text happens to end. */
+    flex: 1 0 auto;
+  }
+
+  /* The real photo stays put (still reserving its column's width, for the
+     content column's 55% to size against), but is hidden in favor of the
+     floating decorative copy below — see that rule for why. */
   .carousel-story .carousel-story-slide-image {
     flex: 0 0 45%;
     max-width: 500px;
-    display: flex;
-    justify-content: flex-end;
+    visibility: hidden;
   }
 
-  .carousel-story .carousel-story-slide-image img {
+  /* Decorative copy of the active slide's photo (kept in sync by
+     updateActiveSlide in carousel-story.js), positioned to hang past the
+     teal background — fortinet.com's own image does this too
+     (position:absolute inside an overflow:visible banner). The real <img>
+     above can't do this itself: this carousel's horizontal scrolling needs
+     a real overflow-x:scroll on the slide track, and CSS always downgrades
+     a differing overflow-y:visible on THAT SAME element to
+     overflow-y:auto (spec-defined, not fixable with different values here)
+     — auto still clips, so nothing can escape a scroll-x container
+     vertically no matter what's written on it or its ancestors. This div
+     lives directly in .carousel-story instead (a background-image, not a
+     moved <img>, so it can stay in sync without relocating DOM nodes
+     between the mobile/desktop layouts each needs it in a different place
+     for) — .carousel-story has no such overflow, so the photo actually
+     hangs past its bottom edge into the white area below. This wrapper
+     itself just mirrors .carousel-story-slides-container's own centering
+     (max-width/margin/padding) so its ::after (the actual visible photo)
+     lines up with where the real image column sits. */
+  .carousel-story-float-photo {
+    position: absolute;
+    inset: 0;
+    max-width: 1240px;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+
+  .carousel-story-float-photo::after {
+    content: '';
+    position: absolute;
+
+    /* Measured directly on fortinet.com (#banner1 img.banner-image):
+       top:83px, right:15px (relative to the banner-wrapper's own edges —
+       not perfectly level with the heading's own 75px, just close), width
+       500px, height 515px (natural, from an explicit bottom:-58px against
+       a 540px-tall banner — same math as this row's own min-height:540
+       above and this element's fixed 515px height below). */
+    top: 83px;
+    right: 15px;
+    width: 500px;
+    max-width: calc(45% - 15px);
     aspect-ratio: 500 / 515;
-    max-height: 515px;
+    background-image: var(--carousel-story-photo-url, none);
+    background-size: cover;
+    background-position: center;
+    border-radius: 23px;
+
+    --carousel-story-drop-distance: 83px; /* matches top:83px above */
+  }
+
+  .carousel-story-float-photo.carousel-story-drop-in::after {
+    animation: carousel-story-drop-in 0.6s ease-out;
   }
 
   /* Scoped to just the image column (55% content / 45% image split above)
@@ -281,6 +635,21 @@
      was reordered to put them ahead of the quote. */
   .carousel-story .carousel-story-navigation-buttons {
     left: 55%;
+  }
+
+  /* fortinet.com has no prev/next arrows, no dot indicators, and hides its
+     own counter+arrows widget (display:none) at this width — navigation is
+     via the logo strip only. These three are ours, added to give a
+     keyboard/no-JS-thumbnail-click fallback; hiding them at the width
+     where the logo strip is comfortably clickable matches the source's
+     actual look without losing that fallback at narrower widths. */
+  .carousel-story .carousel-story-navigation-buttons,
+  .carousel-story nav[aria-label] {
+    display: none;
+  }
+
+  .carousel-story-container > .default-content-wrapper > p:first-child {
+    display: none;
   }
 }
 
@@ -292,6 +661,21 @@
   max-width: 1240px;
   margin: 24px auto 0;
   padding: 0 24px;
+}
+
+/* The 24px gap above (needed at mobile, where the "01/04" counter hidden at
+   >=900px above sits right against it) doesn't exist on fortinet.com at
+   this width: with that counter gone, the logo strip — and the
+   active-story bar this block sets on top of it (see ul li.active below) —
+   sits flush against the colored banner's own bottom edge there (measured
+   directly: 0px gap). Placed after the base rule above (not inside the
+   earlier >=900px block further up) so it actually wins the cascade — same
+   specificity, so source order decides, and that earlier block comes
+   before this rule sets the 24px in the first place. */
+@media (width >= 900px) {
+  .carousel-story-container > .default-content-wrapper {
+    margin-top: 0;
+  }
 }
 
 .carousel-story-container > .default-content-wrapper > p:first-child {
@@ -313,12 +697,17 @@
 /* Logo thumbnails dim to indicate which slide is inactive — fortinet.com
    sets opacity:1 on the current slide's logo and 0.2 on the rest. Synced
    to the active slide by carousel-story.js (also made clickable there, to
-   jump straight to that story like the dot indicators already do). */
+   jump straight to that story like the dot indicators already do).
+   border-top:transparent reserves the same space the active indicator below
+   needs, so toggling which logo is active doesn't shift any of them down by
+   its height. */
 .carousel-story-container > .default-content-wrapper ul li {
+  position: relative;
   flex: 0 0 auto;
   width: 110px;
   opacity: 0.2;
   cursor: pointer;
+  border-top: 5px solid transparent;
   transition: opacity 0.2s;
 }
 
@@ -329,13 +718,36 @@
   object-fit: contain;
 }
 
+/* fortinet.com marks the active story's logo with a bar directly above it —
+   measured on the source (img.nav-img.active): a border-top, flush against
+   the logo, not a separate underline below it. border-top-color (not a
+   separate rule) so this shares the base li rule's reserved border-top
+   space above instead of adding a second one. Set here on the <li> rather
+   than the <img> itself, so it spans this item's own full 110px width (the
+   img itself is narrower, sized to its own logo's aspect ratio) and doesn't
+   need `object-fit`/border-box interactions with the image's own sizing. */
 .carousel-story-container > .default-content-wrapper ul li.active {
   opacity: 1;
   cursor: default;
+  border-top-color: #0c2039;
 }
 
 /* "Explore All Customer Stories" — a red pill, matching the CTA styling
-   used elsewhere on the page (e.g. the AI-security section's button). */
+   used elsewhere on the page (e.g. the AI-security section's button).
+   Alignment and spacing measured directly on fortinet.com's own
+   .cta-wrapper (the element right after ul.customer-stories-nav, the same
+   logo strip this block's own ul is styled to match): centered, not
+   left-aligned like the default block-level <p> would render, with
+   margin:85px 0 — 85px below the logo strip above and another 85px below
+   itself before the next section — rather than the default (tiny) paragraph
+   margin this would otherwise get. Not width/breakpoint-dependent on the
+   source (same margin at mobile and desktop widths there), so no media
+   query needed here either. */
+.carousel-story-container > .default-content-wrapper > p:has(a):last-child {
+  margin: 85px 0;
+  text-align: center;
+}
+
 .carousel-story-container > .default-content-wrapper > p:has(a):last-child a:any-link {
   display: inline-block;
   padding: 19px 30px;
