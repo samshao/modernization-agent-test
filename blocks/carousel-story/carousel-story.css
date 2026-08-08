@@ -620,6 +620,14 @@
      lines up with where the real image column sits. */
   .carousel-story-float-photo {
     position: absolute;
+    z-index: 3; /* fortinet.com's own photo/dots overlap horizontally by
+      ~126px (measured directly: img z-index:1000, dots z-index:999) — the
+      photo sits above the dots there, hiding the overlapping portion of the
+      pattern behind it. Without an explicit z-index here (auto), this
+      container stacked BELOW .carousel-story-dots' z-index:2, so the same
+      overlap instead drew the dots on top of the photo — backwards from
+      the source. 3 only needs to beat that 2, not literally match fortinet's
+      much larger values. */
     inset: 0;
     max-width: 1240px;
     margin: 0 auto;
