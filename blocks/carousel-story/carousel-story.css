@@ -56,27 +56,28 @@
 /* Dot-grid watermark, right side — the actual SVG fortinet.com uses (55
    individual <rect> dots, fetched and inlined by carousel-story.js, not a
    CSS tiled-background approximation), rotated 90deg to stand it up into a
-   tall strip the way the source does. Measured directly on fortinet.com:
-   this starts at roughly the vertical midpoint of the photo (photo top
-   83px + half its 515px height ≈ 340px — see .carousel-story-float-photo
-   below for both those numbers), not at this section's own top, and sits
-   right:52px in from this section's own right edge — a real margin, not a
-   bleed like the photo/quote-card get. Lives directly in .carousel-story
-   (which has no overflow restriction, see above). Desktop-only: at mobile
-   widths the image and text stack full-width, leaving no space for this to
-   sit beside them without covering the quote card. */
+   tall strip the way the source does. Measured directly on fortinet.com
+   (svg.customer-dots-bg, relative to its own #banner1): top:312px,
+   height:500px — not exactly "half of the photo" (83 + 515/2 ≈ 340) as an
+   earlier revision assumed; that was a reasonable-looking guess but measured
+   ~28px short of the real value. right:51px in from this section's own
+   right edge is a real margin, not a bleed like the photo/quote-card get.
+   Lives directly in .carousel-story (which has no overflow restriction, see
+   above). Desktop-only: at mobile widths the image and text stack
+   full-width, leaving no space for this to sit beside them without covering
+   the quote card. */
 @media (width >= 900px) {
   .carousel-story-dots {
     position: absolute;
     z-index: 2;
-    top: 340px;
-    right: 52px;
+    top: 312px;
+    right: 51px;
     width: 200px;
-    height: 496px;
+    height: 500px;
     pointer-events: none;
 
-    --carousel-story-drop-distance: 340px; /* matches top:340px above — starting
-      the animation at translateY(-340px) puts it flush with this section's own
+    --carousel-story-drop-distance: 312px; /* matches top:312px above — starting
+      the animation at translateY(-312px) puts it flush with this section's own
       top edge. */
   }
 
@@ -88,7 +89,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 496px;
+    width: 500px;
     height: 200px;
     transform: translate(-50%, -50%) rotate(90deg);
   }
