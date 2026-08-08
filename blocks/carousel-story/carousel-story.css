@@ -94,6 +94,24 @@
   }
 }
 
+/* Full-bleed clip boundary for the crossfade below (see createSlide/decorate
+   in carousel-story.js for why this is a separate wrapper, not overflow on
+   .carousel-story-slides-container itself): that container is centered and
+   only 1240px wide, so clipping there — as an earlier revision did, on
+   .carousel-story-slide itself — cut the quote-block's own escape-to-the-
+   true-left-border trick short at the container's own (narrower) edge
+   instead of this section's real one. The gap this left was only a sliver
+   at typical desktop widths (the container's own side margin there), easy
+   to miss, but grew to hundreds of pixels on wider screens, where that
+   margin is much bigger. Clipping here instead — a genuinely full-bleed
+   ancestor — still contains the crossfade's overlapping stacked slides
+   (nothing needs to paint past THIS element's edges), while letting the
+   quote-block's ::before reach all the way to this section's true edge
+   underneath it. */
+.carousel-story .carousel-story-slides-clip {
+  overflow: hidden;
+}
+
 .carousel-story .carousel-story-slides-container {
   position: relative;
 
@@ -134,13 +152,6 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
-
-  /* Overlapping stacked slides would otherwise show through each other
-     during the crossfade (each is fully opaque content-wise, just faded
-     via the opacity above) — this and the quote-block's negative-left
-     bleed both need clipping to this slide's own box, or the bleed paints
-     into whichever slide happens to be stacked next in DOM order. */
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 32px;

@@ -300,7 +300,18 @@ export default async function decorate(block) {
   });
 
   container.append(slidesWrapper);
-  block.prepend(container);
+
+  // Full-bleed wrapper around the (centered, narrower) container above,
+  // purely to clip the crossfade's overlapping stacked slides — see
+  // .carousel-story-slides-clip in carousel-story.css for why this can't
+  // just be overflow:hidden on .carousel-story-slide itself (that clips at
+  // the slide's own centered/narrow box, not this section's true edges,
+  // which defeats the quote-block's own escape-to-the-left-border trick in
+  // updateActiveSlide below).
+  const clipWrapper = document.createElement('div');
+  clipWrapper.className = 'carousel-story-slides-clip';
+  clipWrapper.append(container);
+  block.prepend(clipWrapper);
 
   // Desktop-only decorative copy of the active slide's photo (see
   // .carousel-story-float-photo in carousel-story.css) — a plain div, not
