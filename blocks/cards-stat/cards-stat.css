@@ -168,7 +168,8 @@ main .cards-stat-container.dark {
     grid's own first column off the left edge of the page — at left:0 (fully
     on-canvas) all 5 of its columns show, one more than the source's 4. -55px
     is exactly one column's spacing (the asset's dots repeat every 55px), so
-    it drops precisely the first column and nothing more. */
+    it drops precisely the first column and nothing more. Overridden below
+    at >=900px, where this value stops being correct — see that rule. */
   bottom: -40px;
 }
 
@@ -193,6 +194,37 @@ main .cards-stat-container.dark {
     width: 228px;
     height: 411px;
     overflow: hidden;
+
+    /* -55px (the base rule above) is a margin from this section's own
+       full-bleed left edge — correct-looking only at the specific viewport
+       width it was measured at. At >=900px "100T" and the other stats sit
+       in a max-width:1200px centered grid (.cards-stat > ul), so the gap
+       between this section's true edge and that grid's own edge grows with
+       viewport width, dragging this watermark away from "100T" the wider
+       the screen gets (confirmed directly: 39px gap from "100T" at 1464px,
+       267px at 1920px). Recalibrated from fortinet.com's own real,
+       constant relationship instead — checked directly there: its own
+       first stat number and its green-dots watermark stay exactly 32px
+       apart regardless of viewport width (identical at 1464px and 1920px).
+
+       (100vw - 1200px) / 2 is that centered grid's own left edge (standard
+       max-width/margin:auto centering math) — since this section is
+       full-bleed, its own left edge is the viewport's, so 100vw stands in
+       for "this section's own width" here without needing a separate
+       centered reference element (the approach used for carousel-story's
+       analogous photo/dots drift, where the clipping/stacking rules on
+       this section's own wrapper make adding one riskier — see the
+       "intentionally left position:static" comment above). "100T" itself
+       sits 80px past that edge (.cards-stat-card-body's own left padding
+       at this width) via text-align:center on an h3 that still spans its
+       full grid cell, not the rendered glyphs' own edge — a stable
+       reference independent of how wide any specific number renders.
+       Subtracting the target 32px gap and this image's own 228px width
+       gives this element's own left edge, expressed relative to the
+       viewport (the containing block position:absolute resolves against
+       here, since .cards-stat-container is that same full-bleed width):
+       (100vw - 1200px)/2 + 80 - 32 - 228 = (100vw - 1200px)/2 - 180. */
+    left: calc((100vw - 1200px) / 2 - 180px);
   }
 
   .cards-stat-container > .default-content-wrapper:last-child img {
