@@ -16,6 +16,18 @@ const SOCIAL_ICONS = {
   rss: { file: 'footer-social-rss.svg', label: 'RSS' },
 };
 
+// fortinet.com's own 6 social links, in the order they appear there —
+// used whenever the footer doc hasn't authored these yet (see buildSocialRow
+// below), so this row shows up correctly without waiting on a content edit.
+const DEFAULT_SOCIAL_LINKS = [
+  ['linkedin', 'https://www.linkedin.com/company/fortinet'],
+  ['x', 'https://www.x.com/Fortinet'],
+  ['youtube', 'https://www.youtube.com/channel/UCJHo4AuVomwMRzgkA5DQEOA?sub_confirmation=1'],
+  ['instagram', 'https://www.instagram.com/fortinet/'],
+  ['facebook', 'https://www.facebook.com/fortinet'],
+  ['rss', 'https://www.fortinet.com/rss-feeds'],
+];
+
 function fetchIcon(el, file) {
   fetch(`${window.hlx.codeBasePath}/icons/${file}`)
     .then((resp) => (resp.ok ? resp.text() : ''))
@@ -30,12 +42,22 @@ function fetchIcon(el, file) {
  * as plain links naming the platform (e.g. "LinkedIn") anywhere in the given
  * column, since that's the only signal available — this finds them by that
  * visible text, moves them into their own list, and swaps in the real icon.
+ * Falls back to fortinet.com's own real links (DEFAULT_SOCIAL_LINKS above)
+ * if none are authored yet, rather than silently omitting the row.
  * @param {Element} column the column to search for and relocate social links within
  */
 function buildSocialRow(column) {
-  const socialLinks = [...column.querySelectorAll('a')]
+  let socialLinks = [...column.querySelectorAll('a')]
     .filter((a) => a.textContent.trim().toLowerCase() in SOCIAL_ICONS);
-  if (!socialLinks.length) return;
+
+  if (!socialLinks.length) {
+    socialLinks = DEFAULT_SOCIAL_LINKS.map(([key, href]) => {
+      const a = document.createElement('a');
+      a.href = href;
+      a.textContent = SOCIAL_ICONS[key].label;
+      return a;
+    });
+  }
 
   const ul = document.createElement('ul');
   ul.className = 'footer-social';

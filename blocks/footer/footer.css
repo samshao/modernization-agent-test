@@ -168,10 +168,17 @@ footer .footer li {
   line-height: 1.4;
 }
 
-/* columns block: responsive grid of link columns */
+/* columns block: responsive grid of link columns. align-items:start
+   overrides the generic columns block's own align-items:center (right for
+   its usual image+text pairing elsewhere on the site, wrong here) — center
+   was vertically centering each column within the shared row height (set
+   by whichever column has the most links), so a short column like "Connect
+   With Us" started well below its taller siblings instead of flush with
+   their tops like fortinet.com's own footer columns. */
 footer .columns > div {
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 32px 24px;
 }
 
