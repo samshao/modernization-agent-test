@@ -6,7 +6,17 @@ footer {
   font-family: var(--body-font-family);
 }
 
-footer .footer > div {
+/* Targets each section within the footer fragment individually (.section,
+   not the shared wrapper div itself) — footer.js flattens the fragment's
+   own sections into one plain wrapper div with no width constraint of its
+   own, so an earlier revision that put this rule on that wrapper instead
+   constrained every section inside it to the same 1240px/centered/padded
+   box as one unit. That's right for the black footer's columns, but wrong
+   for footer-legal's own full-bleed gray band below it — the two sections
+   need to size independently, the same way main > .section > div lets
+   individual page sections (e.g. cards-panel's own full-bleed override)
+   differ from each other instead of all sharing one box. */
+footer .footer > div > .section {
   margin: auto;
   max-width: var(--content-max-width, 1240px);
   padding: 48px 24px 32px;
@@ -117,7 +127,7 @@ footer .default-content-wrapper > p:last-child a + a::before {
 }
 
 @media (width >= 900px) {
-  footer .footer > div {
+  footer .footer > div > .section {
     padding: 56px 32px 32px;
   }
 
