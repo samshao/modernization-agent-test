@@ -64,6 +64,24 @@ footer .footer-legal-badges li:first-child {
   margin-right: auto;
 }
 
+/* fortinet.com's own authored order for the 6 sponsor badges after the
+   wordmark (Attanasio, Juventus, PGA Americas, European Tour, Barcelona,
+   Founders Cup — the order they appear in fortinet.com's own source, and
+   so the order the content here was authored in too) isn't the order they
+   actually render in on the source: measuring real x-positions there shows
+   the wordmark stays first, but everything after it is visually reversed
+   (Founders Cup, Barcelona, European Tour, PGA Americas, Juventus,
+   Attanasio). Reproducing that reversal with `order` here rather than
+   asking the doc to be re-authored in visual order — this way it's still
+   correct even if the badges are ever added to /footer in DOM order again. */
+footer .footer-legal-badges li:nth-child(1) { order: 1; } /* Fortinet (wordmark) */
+footer .footer-legal-badges li:nth-child(2) { order: 7; } /* Romain Attanasio */
+footer .footer-legal-badges li:nth-child(3) { order: 6; } /* Juventus */
+footer .footer-legal-badges li:nth-child(4) { order: 5; } /* PGA Americas */
+footer .footer-legal-badges li:nth-child(5) { order: 4; } /* European Tour */
+footer .footer-legal-badges li:nth-child(6) { order: 3; } /* FC Barcelona */
+footer .footer-legal-badges li:nth-child(7) { order: 2; } /* LPGA Founders Cup */
+
 /* Fortinet wordmark (first badge) renders noticeably larger than the
    sponsor badges after it on the source (194x22 vs ~120x35) — img itself
    carries the real aspect ratio, height just caps it to match. */
