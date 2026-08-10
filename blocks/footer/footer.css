@@ -26,14 +26,116 @@ footer .footer p {
   margin: 0;
 }
 
-/* links */
+/* links — established here, before every more-specific a:any-link override
+   below (the subscribe form's consent link, the legal-links row, etc.), so
+   each of those layers on top of this base instead of coming before it.
+   :hover is further down (see near the end of this file), after every
+   selector its own specificity needs to exceed. */
 footer a:any-link {
   color: #fff;
   text-decoration: none;
 }
 
-footer a:any-link:hover {
-  color: #fff;
+/* Social icon row — appended after "Connect With Us"'s own link list (see
+   buildSocialRow in footer.js). Icons are already white in the source SVGs
+   (fill baked in), so no filter/recolor needed here. */
+footer .footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 17px;
+  margin: 20px 0 0;
+}
+
+footer .footer-social li {
+  margin: 0;
+}
+
+footer .footer-social a {
+  display: block;
+}
+
+footer .footer-social svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+/* Email signup form (see buildEmailForm in footer.js) — measured directly
+   from fortinet.com's own .ftnt-subscribe-form: white input, no border,
+   red submit button beside it, consent checkbox + copy below. */
+footer .footer-subscribe-form {
+  margin: 0 0 24px;
+}
+
+footer .footer-subscribe-control {
+  display: flex;
+}
+
+footer .footer-subscribe-control label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+footer .footer-subscribe-control input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 9px;
+  background-color: #fff;
+  color: #000;
+  font-size: var(--body-font-size-xs, 13px);
+}
+
+footer .footer-subscribe-control button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 33px;
+  border: 0;
+  padding: 0;
+  background-color: var(--brand-red, #da291c);
+  cursor: pointer;
+}
+
+footer .footer-subscribe-control button img,
+footer .footer-subscribe-control button svg {
+  width: 16px;
+  height: 16px;
+}
+
+footer .footer-subscribe-status {
+  margin: 12px 0 0;
+  color: var(--brand-red, #da291c);
+  font-size: var(--body-font-size-xs, 13px);
+}
+
+footer .footer-subscribe-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+footer .footer-subscribe-consent input {
+  flex: 0 0 auto;
+  margin: 3px 0 0;
+  accent-color: var(--brand-red, #da291c);
+}
+
+footer .footer-subscribe-consent p {
+  margin: 0;
+  font-size: var(--body-font-size-xs, 13px);
+  line-height: 1.4;
+  color: rgb(255 255 255 / 80%);
+}
+
+footer .footer-subscribe-consent a:any-link {
+  color: rgb(255 255 255 / 80%);
   text-decoration: underline;
 }
 
@@ -88,6 +190,11 @@ footer .default-content-wrapper > p:first-child {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid rgb(255 255 255 / 20%);
+}
+
+footer a:any-link:hover {
+  color: #fff;
+  text-decoration: underline;
 }
 
 /* legal links row — inline list separated by vertical bars */
