@@ -1,0 +1,109 @@
+/* footer-legal — fortinet.com's second footer section (light gray), below
+   the main black footer: sponsor/partner badges, copyright, an extended
+   legal-links row, a tagline, and "Also of Interest" links. Measured
+   directly from fortinet.com's own .footer-row.copyrights.
+
+   This block's own .section wrapper inherits the generic "footer .footer >
+   div" rule from footer.css (1240px max-width, centered, 48/24/32px
+   padding) — right for the black footer's columns, but this section is
+   full-bleed light gray on the source, not centered on white. Overridden
+   below via the auto-generated {blockname}-container class, with the same
+   1240px centering re-applied one level in on .footer-legal itself instead. */
+footer .footer-legal-container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background-color: #e6e6e6;
+}
+
+footer .footer-legal {
+  max-width: var(--content-max-width, 1240px);
+  margin: 0 auto;
+  padding: 30px 24px 24px;
+  color: #000;
+  font-size: 15px;
+}
+
+footer .footer-legal > div {
+  margin: 0 0 20px;
+}
+
+/* Sponsor/partner badge row */
+footer .footer-legal-badges ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px 32px;
+  margin: 0 0 30px;
+  padding: 0;
+  list-style: none;
+}
+
+footer .footer-legal-badges li {
+  display: flex;
+  align-items: center;
+}
+
+/* The wordmark (first badge) sits well apart from the sponsor-badge cluster
+   after it on the source (a ~200px gap vs ~15-30px between the sponsor
+   badges themselves) — margin-right:auto pushes just this one item away
+   from the rest, which then keep their own small shared gap from the ul
+   above, rather than every item getting the same wide gap. */
+footer .footer-legal-badges li:first-child {
+  margin-right: auto;
+}
+
+/* Fortinet wordmark (first badge) renders noticeably larger than the
+   sponsor badges after it on the source (194x22 vs ~120x35) — img itself
+   carries the real aspect ratio, height just caps it to match. */
+footer .footer-legal-badges img {
+  display: block;
+  height: 35px;
+  width: auto;
+}
+
+footer .footer-legal-badges li:first-child img {
+  height: 22px;
+}
+
+footer .footer-legal-copyright {
+  margin-bottom: 12px;
+}
+
+/* Legal links row — plain black text/links separated by literal " | "
+   typed in the source doc (matching the pipe-separated convention already
+   used for the "Terms of Services / Privacy Policy" line and elsewhere on
+   this page), not list markup — an author can add/remove links without
+   touching this block's code. */
+footer .footer-legal-links {
+  margin-bottom: 20px;
+}
+
+footer .footer-legal-copyright,
+footer .footer-legal-links,
+footer .footer-legal-tagline {
+  color: #000;
+}
+
+footer .footer-legal a {
+  color: #000;
+}
+
+footer .footer-legal-tagline {
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+footer .footer-legal-also-of-interest {
+  font-size: 13px;
+  color: #555;
+}
+
+footer .footer-legal-also-of-interest-label {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+footer .footer-legal-also-of-interest a {
+  color: #555;
+}
