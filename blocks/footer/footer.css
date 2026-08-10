@@ -70,8 +70,12 @@ footer .footer-social svg {
 /* Email signup form (see buildEmailForm in footer.js) — measured directly
    from fortinet.com's own .ftnt-subscribe-form: white input, no border,
    red submit button beside it, consent checkbox + copy below. */
+
+/* margin-bottom pushes the "Connect With Us" heading below this form down
+   to align with "Ransomware Hub" in the "More" column beside it (measured
+   directly: 43px lower than the previous 24px produced). */
 footer .footer-subscribe-form {
-  margin: 0 0 24px;
+  margin: 0 0 67px;
 }
 
 footer .footer-subscribe-control {
