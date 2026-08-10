@@ -329,10 +329,21 @@ export default async function decorate(block) {
   // Static (not re-synced per slide like the photo above): every slide
   // shares the same fixed photo top/height (see carousel-story.css), so
   // there's a single position that's correct for all of them.
+  //
+  // dotsFrame mirrors .carousel-story-float-photo's own outer wrapper — a
+  // reference frame matching the centered 1240px content column's own
+  // max-width/centering — so dots' own top/right values (set on the real
+  // .carousel-story-dots inside it) resolve against the image's actual
+  // edge instead of this section's full-bleed one, which only looked
+  // right at the specific viewport width it was measured at (see
+  // carousel-story.css for the full explanation).
+  const dotsFrame = document.createElement('div');
+  dotsFrame.className = 'carousel-story-dots-frame';
   const dots = document.createElement('div');
   dots.className = 'carousel-story-dots';
   dots.setAttribute('aria-hidden', 'true');
-  block.append(dots);
+  dotsFrame.append(dots);
+  block.append(dotsFrame);
   fetch(`${window.hlx.codeBasePath}/icons/carousel-story-dots.svg`)
     .then((resp) => (resp.ok ? resp.text() : ''))
     .then((svg) => { dots.innerHTML = svg; })
