@@ -56,27 +56,76 @@
 /* Dot-grid watermark, right side — the actual SVG fortinet.com uses (55
    individual <rect> dots, fetched and inlined by carousel-story.js, not a
    CSS tiled-background approximation), rotated 90deg to stand it up into a
-   tall strip the way the source does. Measured directly on fortinet.com:
-   this starts at roughly the vertical midpoint of the photo (photo top
-   83px + half its 515px height ≈ 340px — see .carousel-story-float-photo
-   below for both those numbers), not at this section's own top, and sits
-   right:52px in from this section's own right edge — a real margin, not a
-   bleed like the photo/quote-card get. Lives directly in .carousel-story
-   (which has no overflow restriction, see above). Desktop-only: at mobile
-   widths the image and text stack full-width, leaving no space for this to
-   sit beside them without covering the quote card. */
+   tall strip the way the source does. Measured directly on fortinet.com
+   (svg.customer-dots-bg, relative to its own #banner1): top:312px,
+   height:500px — not exactly "half of the photo" (83 + 515/2 ≈ 340) as an
+   earlier revision assumed; that was a reasonable-looking guess but measured
+   ~28px short of the real value. right:51px is a real margin, not a bleed
+   like the photo/quote-card get — but measured relative to the *image*,
+   which sits inside the centered 1240px content column, not relative to
+   this section's own true (full-bleed) right edge. An earlier revision set
+   right:51px directly on .carousel-story-dots itself, which lives straight
+   in .carousel-story (full-bleed) — right there resolves against that
+   full-bleed edge, so the 51px gap only looked correct at the specific
+   viewport width it was measured at; at any wider width the true edge
+   moves further from the image than the content column's own edge does,
+   dragging the dots away from the photo (confirmed directly: 103px short
+   of the photo's right edge at 1920px, vs. the intended ~51px). Fixed the
+   same way .carousel-story-float-photo already handles this exact problem:
+   an outer reference frame mirrors the centered content column's own
+   max-width/centering (see .carousel-story-dots-frame below), and the
+   actual positioned/sized box — this rule — lives inside that frame
+   instead of directly in the full-bleed section, so right:51px resolves
+   against the column's own edge and tracks the image at every width.
+
+   fortinet.com sets this to display:none below 900px (confirmed directly:
+   svg.customer-dots-bg computes display:none there) rather than just
+   omitting positioning for it — at mobile widths the image and text stack
+   full-width, leaving no room for this beside them without covering the
+   quote card. Without an explicit display:none here too, this div (real
+   content, not empty) fell back to its default block display, rendering as
+   an unstyled, unpositioned, full-viewport-width strip below the slide
+   indicators — not just "not ideally placed" but genuinely unstyled. */
+.carousel-story-dots-frame {
+  display: none;
+}
+
 @media (width >= 900px) {
+  .carousel-story-dots-frame {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    max-width: 1240px;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+
+  /* right is negative — the dots box pokes out past .carousel-story-dots-
+     frame's own right edge, rather than sitting inside it. This isn't a
+     simple fixed margin: fortinet.com's own dots and photo overlap
+     horizontally by a constant 125.71px, verified directly at both 1464px
+     and 1920px widths (identical both times) — this position is calibrated
+     from THAT overlap plus the photo's own right:15px (see
+     .carousel-story-float-photo::after below) and this box's own 200px
+     width, not from a directly-measured "right" value: photo's own right
+     inset (-15, i.e. 15px in) + (this box's 200px width − the 125.71px
+     overlap) = 59.29px past the frame's edge, i.e. right:-59.29px. A
+     literal right:51px here (an earlier revision's value, actually
+     measured as a margin from .carousel-story's own full-bleed edge, back
+     when this element lived there directly rather than in this centered
+     frame) stayed put relative to the *frame*, not the image, so it
+     silently drifted away from the photo at any width other than the one
+     it happened to be measured at. */
   .carousel-story-dots {
     position: absolute;
-    z-index: 2;
-    top: 340px;
-    right: 52px;
+    top: 312px;
+    right: -59.29px;
     width: 200px;
-    height: 496px;
-    pointer-events: none;
+    height: 500px;
 
-    --carousel-story-drop-distance: 340px; /* matches top:340px above — starting
-      the animation at translateY(-340px) puts it flush with this section's own
+    --carousel-story-drop-distance: 312px; /* matches top:312px above — starting
+      the animation at translateY(-312px) puts it flush with this section's own
       top edge. */
   }
 
@@ -88,10 +137,28 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 496px;
+    width: 500px;
     height: 200px;
     transform: translate(-50%, -50%) rotate(90deg);
   }
+}
+
+/* Full-bleed clip boundary for the crossfade below (see createSlide/decorate
+   in carousel-story.js for why this is a separate wrapper, not overflow on
+   .carousel-story-slides-container itself): that container is centered and
+   only 1240px wide, so clipping there — as an earlier revision did, on
+   .carousel-story-slide itself — cut the quote-block's own escape-to-the-
+   true-left-border trick short at the container's own (narrower) edge
+   instead of this section's real one. The gap this left was only a sliver
+   at typical desktop widths (the container's own side margin there), easy
+   to miss, but grew to hundreds of pixels on wider screens, where that
+   margin is much bigger. Clipping here instead — a genuinely full-bleed
+   ancestor — still contains the crossfade's overlapping stacked slides
+   (nothing needs to paint past THIS element's edges), while letting the
+   quote-block's ::before reach all the way to this section's true edge
+   underneath it. */
+.carousel-story .carousel-story-slides-clip {
+  overflow: hidden;
 }
 
 .carousel-story .carousel-story-slides-container {
@@ -134,13 +201,6 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
-
-  /* Overlapping stacked slides would otherwise show through each other
-     during the crossfade (each is fully opaque content-wise, just faded
-     via the opacity above) — this and the quote-block's negative-left
-     bleed both need clipping to this slide's own box, or the bleed paints
-     into whichever slide happens to be stacked next in DOM order. */
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -596,6 +656,14 @@
      lines up with where the real image column sits. */
   .carousel-story-float-photo {
     position: absolute;
+    z-index: 3; /* fortinet.com's own photo/dots overlap horizontally by
+      ~126px (measured directly: img z-index:1000, dots z-index:999) — the
+      photo sits above the dots there, hiding the overlapping portion of the
+      pattern behind it. Without an explicit z-index here (auto), this
+      container stacked BELOW .carousel-story-dots' z-index:2, so the same
+      overlap instead drew the dots on top of the photo — backwards from
+      the source. 3 only needs to beat that 2, not literally match fortinet's
+      much larger values. */
     inset: 0;
     max-width: 1240px;
     margin: 0 auto;

@@ -300,7 +300,18 @@ export default async function decorate(block) {
   });
 
   container.append(slidesWrapper);
-  block.prepend(container);
+
+  // Full-bleed wrapper around the (centered, narrower) container above,
+  // purely to clip the crossfade's overlapping stacked slides — see
+  // .carousel-story-slides-clip in carousel-story.css for why this can't
+  // just be overflow:hidden on .carousel-story-slide itself (that clips at
+  // the slide's own centered/narrow box, not this section's true edges,
+  // which defeats the quote-block's own escape-to-the-left-border trick in
+  // updateActiveSlide below).
+  const clipWrapper = document.createElement('div');
+  clipWrapper.className = 'carousel-story-slides-clip';
+  clipWrapper.append(container);
+  block.prepend(clipWrapper);
 
   // Desktop-only decorative copy of the active slide's photo (see
   // .carousel-story-float-photo in carousel-story.css) — a plain div, not
@@ -318,10 +329,21 @@ export default async function decorate(block) {
   // Static (not re-synced per slide like the photo above): every slide
   // shares the same fixed photo top/height (see carousel-story.css), so
   // there's a single position that's correct for all of them.
+  //
+  // dotsFrame mirrors .carousel-story-float-photo's own outer wrapper — a
+  // reference frame matching the centered 1240px content column's own
+  // max-width/centering — so dots' own top/right values (set on the real
+  // .carousel-story-dots inside it) resolve against the image's actual
+  // edge instead of this section's full-bleed one, which only looked
+  // right at the specific viewport width it was measured at (see
+  // carousel-story.css for the full explanation).
+  const dotsFrame = document.createElement('div');
+  dotsFrame.className = 'carousel-story-dots-frame';
   const dots = document.createElement('div');
   dots.className = 'carousel-story-dots';
   dots.setAttribute('aria-hidden', 'true');
-  block.append(dots);
+  dotsFrame.append(dots);
+  block.append(dotsFrame);
   fetch(`${window.hlx.codeBasePath}/icons/carousel-story-dots.svg`)
     .then((resp) => (resp.ok ? resp.text() : ''))
     .then((svg) => { dots.innerHTML = svg; })
