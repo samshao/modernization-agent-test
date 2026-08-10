@@ -38,16 +38,23 @@ footer a:any-link {
 
 /* Social icon row — appended after "Connect With Us"'s own link list (see
    buildSocialRow in footer.js). Icons are already white in the source SVGs
-   (fill baked in), so no filter/recolor needed here. */
-footer .footer-social {
+   (fill baked in), so no filter/recolor needed here.
+
+   Selector repeats "footer .footer ul" (rather than just ".footer-social"
+   alone) so this wins on specificity — this element is itself a <ul>, so
+   without the extra structure here that later, more general rule's own
+   margin:0 (meant to zero out every link list's own default margin) beat
+   this one and canceled the margin-top below entirely.
+
+   margin-top:32px here is deliberately more than fortinet.com's own 20px
+   gap above this row — this collapses with the preceding link's own 20px
+   margin-bottom (the larger of the two wins, not their sum), so this is
+   the row's actual top gap, not 20+32. */
+footer .footer ul.footer-social {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 17px;
-  margin: 20px 0 0;
-}
-
-footer .footer-social li {
-  margin: 0;
+  margin: 32px 0 0;
 }
 
 footer .footer-social a {
@@ -163,9 +170,22 @@ footer .footer ul {
   padding: 0;
 }
 
+/* Gap between links within a column — measured directly on fortinet.com
+   (the "More" column's own li margin-bottom): 20px, not 8px. */
 footer .footer li {
-  margin: 0 0 8px;
+  margin: 0 0 20px;
   line-height: 1.4;
+}
+
+/* Overrides the above for the social-icon row specifically, so these sit
+   flush in their own row instead of getting the same 20px margin-bottom
+   real links get. Ties this rule's specificity, so needs to come after it
+   here and repeats .footer-social (a real, if unusual-looking, selector —
+   it just matches the same element twice) to add a class to this
+   selector's specificity without needing a class in the markup that isn't
+   otherwise needed. */
+footer .footer-social.footer-social li {
+  margin: 0;
 }
 
 /* columns block: responsive grid of link columns. align-items:start
