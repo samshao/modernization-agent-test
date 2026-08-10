@@ -38,6 +38,12 @@ footer .footer h3 {
   letter-spacing: 0.3px;
 }
 
+/* stacked heading groups within a column (e.g. Solutions / SMB / Service
+   Providers) get breathing room above each subsequent heading */
+footer .footer ul + h3 {
+  margin-top: 28px;
+}
+
 /* link lists inside columns */
 footer .footer ul {
   list-style: none;
@@ -72,6 +78,36 @@ footer .default-content-wrapper > p:first-child {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid rgb(255 255 255 / 20%);
+}
+
+/* legal links row — inline list separated by vertical bars */
+footer .default-content-wrapper > p:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+footer .default-content-wrapper > p:last-child a:any-link {
+  position: relative;
+  color: rgb(255 255 255 / 80%);
+  font-size: var(--body-font-size-xs, 13px);
+}
+
+footer .default-content-wrapper > p:last-child a:any-link:hover {
+  color: #fff;
+}
+
+/* vertical "|" separators between legal links */
+footer .default-content-wrapper > p:last-child a + a::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 12px;
+  background-color: rgb(255 255 255 / 30%);
 }
 
 @media (width >= 600px) {
