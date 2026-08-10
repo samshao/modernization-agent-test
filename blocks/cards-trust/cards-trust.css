@@ -23,11 +23,20 @@
   }
 }
 
-/* Tile */
+/* Tile. fortinet.com sizes this dynamically (JS-equalized to the tallest
+   tile's own content height, not a handful of clean breakpoints — measured
+   434px at 1464px wide, 365px at 700px, 384px at 390px, no clean pattern
+   between them) rather than a fixed CSS height. A fixed height per
+   breakpoint here is an approximation of that, not a literal match at every
+   width, but was needed at all: height:100% alone (an earlier revision)
+   resolves against this grid row's own auto height, which just grows to fit
+   whatever this tile's own content needs — taller than the source at every
+   width tried (e.g. 462px here vs the source's 434px at the same 1464px
+   width), not equalized against sibling tiles' content at all. */
 .cards-trust > ul > li {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 384px;
   overflow: hidden;
   border: 0;
   border-bottom: 20px solid rgb(45 45 45); /* accent bar; color set per-tile below */
@@ -35,13 +44,31 @@
   background-color: rgb(45 45 45);
   box-shadow: 0 10px 20px -14px rgb(0 0 0 / 75%);
   color: #fff;
+  transition: background-color 1s;
 }
 
-/* Accent bar colors -- cycle across the 4 tiles */
+@media (width >= 900px) {
+  .cards-trust > ul > li {
+    height: 434px;
+  }
+}
+
+/* Accent bar colors -- cycle across the 4 tiles. Also this tile's own hover
+   background-color (measured directly: e.g. the red tile's own bg flips
+   from rgb(45,45,45) to this same rgb(218,41,28) on hover, not just a
+   lighten/darken of the resting dark gray) — matching each nth-child's own
+   pair of rules keeps the two colors' association with a given tile
+   obvious, rather than repeating the same color twice under two unrelated
+   selector groups elsewhere in this file. */
 .cards-trust > ul > li:nth-child(4n + 1) { border-bottom-color: rgb(218 41 28); }   /* red (brand) */
 .cards-trust > ul > li:nth-child(4n + 2) { border-bottom-color: rgb(31 116 222); }  /* blue */
 .cards-trust > ul > li:nth-child(4n + 3) { border-bottom-color: rgb(141 95 204); }  /* purple */
 .cards-trust > ul > li:nth-child(4n + 4) { border-bottom-color: rgb(28 131 136); }  /* teal */
+
+.cards-trust > ul > li:nth-child(4n + 1):hover { background-color: rgb(218 41 28); }
+.cards-trust > ul > li:nth-child(4n + 2):hover { background-color: rgb(31 116 222); }
+.cards-trust > ul > li:nth-child(4n + 3):hover { background-color: rgb(141 95 204); }
+.cards-trust > ul > li:nth-child(4n + 4):hover { background-color: rgb(28 131 136); }
 
 .cards-trust .cards-trust-card-body {
   display: flex;
@@ -51,7 +78,14 @@
   margin: 0;
 }
 
-/* Title */
+/* Title. Sits over a decorative watermark (fortinet.com's own .trust-header:
+   a diagonal-shield + dot-grid SVG, self-hosted here rather than linked from
+   fortinet.com directly) that swaps to a color-matched variant on hover —
+   see the tile's own background-color flip above; this is the same "flip to
+   the accent color" cue applied to the watermark instead of just the flat
+   background. Scoped to the title itself (not a separate header element,
+   which this block's markup doesn't have) since fortinet.com's own header
+   is sized to roughly just the title area (162px), not the full tile. */
 .cards-trust .cards-trust-card-body h3 {
   margin: 0;
   padding: 70px 50px 40px 20px;
@@ -59,7 +93,16 @@
   font-weight: 500;
   line-height: 1.1;
   color: #fff;
+  background-image: url('/icons/trust-default-bg.svg');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: 0 0;
 }
+
+.cards-trust > ul > li:nth-child(4n + 1):hover .cards-trust-card-body h3 { background-image: url('/icons/trust-red-bg.svg'); }
+.cards-trust > ul > li:nth-child(4n + 2):hover .cards-trust-card-body h3 { background-image: url('/icons/trust-blue-bg.svg'); }
+.cards-trust > ul > li:nth-child(4n + 3):hover .cards-trust-card-body h3 { background-image: url('/icons/trust-purple-bg.svg'); }
+.cards-trust > ul > li:nth-child(4n + 4):hover .cards-trust-card-body h3 { background-image: url('/icons/trust-teal-bg.svg'); }
 
 /* Description */
 .cards-trust .cards-trust-card-body p {
@@ -101,4 +144,52 @@
 .cards-trust .cards-trust-card-body a:hover {
   color: #fff;
   text-decoration: underline;
+}
+
+/* Eyebrow-less heading + description + CTA, authored as default content
+   before the block — fortinet.com centers all three (this had no styling
+   at all before, so the heading/description rendered left-aligned as plain
+   text and the CTA as a bare underlined link instead of a button). h2's
+   own font-size already matches the source exactly (48px at >=900px) via
+   the shared --heading-font-size-xl default, so it's left alone here. */
+.cards-trust-container > .default-content-wrapper {
+  padding-top: 40px; /* left/right/bottom inherited from the shared
+    main > .section > div rule in styles.css (24px, 32px at >=900px) --
+    only top spacing needs adding here, so this doesn't regress that
+    rule's own responsive side padding. */
+  text-align: center;
+}
+
+.cards-trust-container > .default-content-wrapper h2 {
+  margin: 0;
+}
+
+.cards-trust-container > .default-content-wrapper p:nth-child(2) {
+  margin: 20px 0 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.cards-trust-container > .default-content-wrapper p:last-child {
+  margin: 20px 0 55px;
+}
+
+/* "Watch Now: Fortinet TV Spot" -- a red pill, matching the CTA styling
+   used elsewhere on the page (e.g. carousel-story's "Explore All Customer
+   Stories"). */
+.cards-trust-container > .default-content-wrapper p:last-child a:any-link {
+  display: inline-block;
+  padding: 19px 30px;
+  border-radius: 30px;
+  background-color: var(--brand-red, #da291c);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cards-trust-container > .default-content-wrapper p:last-child a:hover {
+  background-color: var(--brand-red-dark, #b71a0f);
+  text-decoration: none;
 }
